@@ -1,8 +1,8 @@
 all:
-	javac -d classes -sourcepath src src/match_engine/MatchEngine.java
+	javac -d classes -sourcepath src src/Driver.java
 
 run:
-	java -cp classes src/match_engine/MatchEngine.java
+	java -cp classes src/Driver.java
 
 clean:
 	rm -rf classes

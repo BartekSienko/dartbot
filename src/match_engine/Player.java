@@ -1,5 +1,8 @@
 package match_engine;
 
+import java.util.*;
+
+
 public class Player {
     public String name;
     public int score;
@@ -14,10 +17,30 @@ public class Player {
         this.stats = new PlayerMatchStats();
     }
 
-    public void visitThrow() {
-        int pointsScored = 125;
-        /// TODO: Remove stub with actual throwing
-        if (this.score <= 130) {
+
+
+    private int getScore(Scanner sc) {
+        Set<Integer> impossibleScores = new HashSet<>(Arrays.asList(179, 178, 176, 175, 173, 172, 169, 166, 163));
+        int pointsScored = 0;
+        boolean legalScore = false;
+        System.out.println(this.name + " to throw: ");
+        while (!legalScore) {
+            pointsScored = sc.nextInt();
+            legalScore = true;
+            if (impossibleScores.contains(pointsScored) || pointsScored > 181) {
+                System.out.println("Impossible score inputed");
+                legalScore = false;
+            } else if (pointsScored > this.score) {
+                System.out.println("BUST! Can't score more than is left!");
+                pointsScored = 0;
+            }
+        }
+        return pointsScored;
+    }
+
+    public void visitThrow(Scanner sc) {
+        int pointsScored = getScore(sc);
+        if ((this.score - pointsScored) == 0) {
             //Stub checkout
             pointsScored = this.score;
             this.stats.addCheckout(pointsScored, 1);

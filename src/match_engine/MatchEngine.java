@@ -1,5 +1,7 @@
 package match_engine;
 
+import java.util.Scanner;
+
 public class MatchEngine {
     public Player player1;
     public Player player2;
@@ -29,26 +31,29 @@ public class MatchEngine {
     public void playLeg() {
         this.newLeg();
         int playerToThrow = this.onThrow;
-
+        Scanner sc = new Scanner(System.in);
         while (this.player1.score > 0 && this.player2.score > 0) {
             if (playerToThrow == 1) {
-                this.player1.visitThrow();
+                this.player1.visitThrow(sc);
                 playerToThrow = 2;
             } else {
-                this.player2.visitThrow();
+                this.player2.visitThrow(sc);
                 playerToThrow = 1;
             }
             System.out.println(this.player1.toString());
             System.out.println(this.player2.toString());
             System.out.println();
-
+            
         }
 
         if (this.player1.score <= 0) {
             this.player1.legs++;
+            System.out.println(this.player1.name + " has won the leg!");
         } else {
             this.player2.legs++;
+            System.out.println(this.player2.name + " has won the leg!");
         }
+        System.out.println(this.toString());
     }
 
 
@@ -59,31 +64,10 @@ public class MatchEngine {
         return null;
     }
 
-    public static void main(String[] args) {
-        Player player1 = new Player("L. Humphries");
-        Player player2 = new Player("L. Littler");
-        MatchLogic rules = new MatchLogic(501, 2, true);
-        
-        MatchEngine match = new MatchEngine(player1, player2, rules);
-    
-        int legCount = 0;
-        boolean matchFinished = false;
-
-        System.out.println("Game on!");
-        while (!matchFinished) {
-
-            match.playLeg();
-
-            if (match.ifWinner(player1) != null) {
-                System.out.println(player1.name + " has won the match!");
-                matchFinished = true;
-            } else if (match.ifWinner(player2) != null) {
-                System.out.println(player2.name + " has won the match!");
-                matchFinished = true;
-            }
-        }
-        System.out.println("Result: " + player1.name + " " + player1.legs + 
-                           ":" + player2.legs + " " + player2.name);
-        
+    @Override
+    public String toString() {
+        return "Current Result: " + player1.name + " " + player1.legs + 
+                           ":" + player2.legs + " " + player2.name;
     }
+
 }
