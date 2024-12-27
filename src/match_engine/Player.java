@@ -25,8 +25,13 @@ public class Player {
         boolean legalScore = false;
         System.out.println(this.name + " to throw: ");
         while (!legalScore) {
-            pointsScored = sc.nextInt();
-            legalScore = true;
+            if (sc.hasNextInt()) {
+                pointsScored = sc.nextInt();
+                legalScore = true;
+            } else {
+                sc.next();
+                legalScore = false;
+            }
             if (impossibleScores.contains(pointsScored) || pointsScored > 181) {
                 System.out.println("Impossible score inputed");
                 legalScore = false;
@@ -59,6 +64,10 @@ public class Player {
         return "(" + this.legs + ")  " + this.score + "  " + this.name;
     }
 
+    @Override
+    public int hashCode() {
+        return this.name.hashCode();
+    }
 
     @Override
     public boolean equals(Object other) {

@@ -16,6 +16,7 @@ public class Driver {
         System.out.println("Game on!");
         while (!matchFinished) {
 
+            System.out.println("Leg " + ++legCount + ":");
             match.playLeg();
 
             if (match.ifWinner(player1) != null) {
