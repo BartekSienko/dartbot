@@ -1,4 +1,4 @@
-package match_engine;
+package org.match_engine;
 
 import java.util.*;
 
@@ -17,8 +17,6 @@ public class Player {
         this.stats = new PlayerMatchStats();
     }
 
-
-
     private int getScore(Scanner sc) {
         Set<Integer> impossibleScores = new HashSet<>(Arrays.asList(179, 178, 176, 175, 173, 172, 169, 166, 163));
         int pointsScored = 0;
@@ -36,8 +34,12 @@ public class Player {
                 System.out.println("Impossible score inputed");
                 legalScore = false;
             } else if (pointsScored > this.score) {
-                System.out.println("BUST! Can't score more than is left!");
-                pointsScored = 0;
+                System.out.println("BUST! Too large score inputed (write 0)");
+                legalScore = false;
+            }
+            if (this.score == pointsScored && !checkLegalCheckout(pointsScored)) {
+                System.out.println("Impossible checkout inputed");
+                legalScore = false;
             }
         }
         return pointsScored;
@@ -45,9 +47,7 @@ public class Player {
 
     public void visitThrow(Scanner sc) {
         int pointsScored = getScore(sc);
-        if ((this.score - pointsScored) == 0) {
-            //Stub checkout
-            pointsScored = this.score;
+        if (this.score == pointsScored) {
             this.stats.addCheckout(pointsScored, 1);
             // Stub, could throw less than 3
             this.stats.addScore(pointsScored, 3);
@@ -58,6 +58,10 @@ public class Player {
         }
     }
 
+    public boolean checkLegalCheckout(int score) {
+        Set<Integer> impossibleCheckouts = new HashSet<>(Arrays.asList(169, 168, 166, 165, 163, 162, 159));
+        return !impossibleCheckouts.contains(score);
+    }    
 
     @Override
     public String toString() {

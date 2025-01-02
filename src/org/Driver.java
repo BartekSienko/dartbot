@@ -1,6 +1,7 @@
-import match_engine.MatchEngine;
-import match_engine.MatchLogic;
-import match_engine.Player;
+package org;
+import org.match_engine.MatchEngine;
+import org.match_engine.MatchLogic;
+import org.match_engine.Player;
 
 public class Driver {
     public static void main(String[] args) {

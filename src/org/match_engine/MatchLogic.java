@@ -1,4 +1,4 @@
-package match_engine;
+package org.match_engine;
 
 public class MatchLogic {
     private final int startScore;

@@ -1,3 +1,7 @@
 {
-    "java.search.scope": "main"
+    "java.search.scope": "main",
+    "java.project.sourcePaths": [
+        "src"
+    ],
+    "java.project.referencedLibraries": []
 }
