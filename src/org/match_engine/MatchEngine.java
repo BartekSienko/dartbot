@@ -62,9 +62,11 @@ public class MatchEngine {
     public Player ifWonLeg() {
         if (this.player1.score <= 0) {
             this.player1.legs++;
+            this.player2.score = 0;
             return this.player1;
         } else if (this.player2.score <= 0) {
             this.player2.legs++;
+            this.player1.score = 0;
             return this.player2;
         }
         return null;
