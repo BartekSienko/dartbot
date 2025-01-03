@@ -16,9 +16,20 @@ public class Player {
         this.legs = 0;
         this.stats = new PlayerMatchStats();
     }
+    
+    public void dartThrow(int pointsScored) {
+        if (this.score == pointsScored) {
+            this.stats.addCheckout(pointsScored, 1);
+            // TODO: Stub, could throw in less than 3
+            this.score = 0;
+        } else {
+            this.score = this.score - pointsScored;
+        }
+        this.stats.addScore(pointsScored, 3);
+    }
 
-    private int getScore(Scanner sc) {
-        Set<Integer> impossibleScores = new HashSet<>(Arrays.asList(179, 178, 176, 175, 173, 172, 169, 166, 163));
+
+    public void visitThrow(Scanner sc) {
         int pointsScored = 0;
         boolean legalScore = false;
         System.out.println(this.name + " to throw: ");
@@ -29,38 +40,37 @@ public class Player {
             } else {
                 sc.next();
                 legalScore = false;
+                continue;
             }
-            if (impossibleScores.contains(pointsScored) || pointsScored > 181) {
-                System.out.println("Impossible score inputed");
-                legalScore = false;
-            } else if (pointsScored > this.score) {
-                System.out.println("BUST! Too large score inputed (write 0)");
-                legalScore = false;
-            }
-            if (this.score == pointsScored && !checkLegalCheckout(pointsScored)) {
-                System.out.println("Impossible checkout inputed");
-                legalScore = false;
+            legalScore = legalScore && checkLegalScore(pointsScored);
+            if (this.score == pointsScored) {
+                legalScore = legalScore && checkLegalCheckout(pointsScored);
             }
         }
-        return pointsScored;
+
+        this.dartThrow(pointsScored);
+
     }
 
-    public void visitThrow(Scanner sc) {
-        int pointsScored = getScore(sc);
-        if (this.score == pointsScored) {
-            this.stats.addCheckout(pointsScored, 1);
-            // Stub, could throw less than 3
-            this.stats.addScore(pointsScored, 3);
-            this.score = 0;
-        } else {
-            this.score = this.score - pointsScored;
-            this.stats.addScore(pointsScored, 3);
+    public boolean checkLegalScore(int pointsScored) {
+        Set<Integer> impossibleScores = new HashSet<>(Arrays.asList(179, 178, 176, 175, 173, 172, 169, 166, 163));
+        if (impossibleScores.contains(pointsScored) || pointsScored > 180) {
+            System.out.println("Impossible score inputed");
+            return false;
+        } else if (pointsScored > this.score) {
+            System.out.println("BUST! Too large score inputed (please input 0)");
+            return false;
         }
+        return true;
     }
 
-    public boolean checkLegalCheckout(int score) {
-        Set<Integer> impossibleCheckouts = new HashSet<>(Arrays.asList(169, 168, 166, 165, 163, 162, 159));
-        return !impossibleCheckouts.contains(score);
+    public boolean checkLegalCheckout(int pointsScored) {
+        Set<Integer> impossibleCheckouts = new HashSet<>(Arrays.asList( 168, 165, 162, 159));
+        if (impossibleCheckouts.contains(pointsScored)) {
+            System.out.println("Impossible checkout inputed");
+            return false;
+        }
+        return true;
     }    
 
     @Override
