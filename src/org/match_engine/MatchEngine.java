@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class MatchEngine {
     public Player player1;
     public Player player2;
-    private final MatchLogic matchRules;
+    public final MatchLogic matchRules;
     public int onThrow;
 
 
@@ -36,10 +36,10 @@ public class MatchEngine {
         Scanner sc = new Scanner(System.in);
         while (this.player1.score > 0 && this.player2.score > 0) {
             if (playerToThrow == 1) {
-                this.player1.visitThrow(sc);
+                this.player1.visitThrow(sc, this.matchRules.ifDoubleOut());
                 playerToThrow = 2;
             } else {
-                this.player2.visitThrow(sc);
+                this.player2.visitThrow(sc, this.matchRules.ifDoubleOut());
                 playerToThrow = 1;
             }
             System.out.println(this.player1.toString());
@@ -47,9 +47,9 @@ public class MatchEngine {
             System.out.println();
             
         }
-
-        if (this.ifWonLeg() != null) {
-            if (this.ifWonLeg().equals(this.player1)) {
+        Player hasWonLeg = this.ifWonLeg();
+        if (hasWonLeg != null) {
+            if (hasWonLeg.equals(this.player1)) {
                 System.out.println(this.player1.name + " has won the leg!");
             } else {
                 System.out.println(this.player2.name + " has won the leg!");

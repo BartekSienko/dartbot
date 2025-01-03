@@ -16,8 +16,8 @@ public class Player {
         this.legs = 0;
         this.stats = new PlayerMatchStats();
     }
-    
-    public void dartThrow(int pointsScored) {
+
+    public void dartThrow(int pointsScored, boolean isDoubleOut) {
         if (this.score == pointsScored) {
             this.stats.addCheckout(pointsScored, 1);
             // TODO: Stub, could throw in less than 3
@@ -29,7 +29,7 @@ public class Player {
     }
 
 
-    public void visitThrow(Scanner sc) {
+    public void visitThrow(Scanner sc, boolean isDoubleOut) {
         int pointsScored = 0;
         boolean legalScore = false;
         System.out.println(this.name + " to throw: ");
@@ -42,23 +42,26 @@ public class Player {
                 legalScore = false;
                 continue;
             }
-            legalScore = legalScore && checkLegalScore(pointsScored);
+            legalScore = legalScore && checkLegalScore(pointsScored, isDoubleOut);
             if (this.score == pointsScored) {
                 legalScore = legalScore && checkLegalCheckout(pointsScored);
             }
         }
 
-        this.dartThrow(pointsScored);
+        this.dartThrow(pointsScored, isDoubleOut);
 
     }
 
-    public boolean checkLegalScore(int pointsScored) {
+    public boolean checkLegalScore(int pointsScored, boolean isDoubleOut) {
         Set<Integer> impossibleScores = new HashSet<>(Arrays.asList(179, 178, 176, 175, 173, 172, 169, 166, 163));
         if (impossibleScores.contains(pointsScored) || pointsScored > 180) {
             System.out.println("Impossible score inputed");
             return false;
         } else if (pointsScored > this.score) {
             System.out.println("BUST! Too large score inputed (please input 0)");
+            return false;
+        } else if (isDoubleOut && (this.score - pointsScored == 1)) {
+            System.out.println("BUST! You cannot checkout 1 (please input 0)");
             return false;
         }
         return true;

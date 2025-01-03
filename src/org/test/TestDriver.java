@@ -61,9 +61,9 @@ public class TestDriver {
         MatchEngine match = new MatchEngine(p1, p2, rules);
         MatchEngine expectedMatch = new MatchEngine(p1Expected, p2Expected, rules);
         testGameState(match, expectedMatch);
-        
-        p1.dartThrow(180);
-        p2.dartThrow(100);
+        boolean ifDoubleOut = match.matchRules.ifDoubleOut();
+        p1.dartThrow(180, ifDoubleOut);
+        p2.dartThrow(100, ifDoubleOut);
         p1Expected.score -= 180;
         p1Expected.stats.scores.add(180);
         p1Expected.stats.dartsThrown += 3;
@@ -72,8 +72,8 @@ public class TestDriver {
         p2Expected.stats.dartsThrown += 3;
         testGameState(match, expectedMatch);
         
-        p1.dartThrow(180);
-        p2.dartThrow(177);
+        p1.dartThrow(180, ifDoubleOut);
+        p2.dartThrow(177, ifDoubleOut);
         p1Expected.score -= 180;
         p1Expected.stats.scores.add(180);
         p1Expected.stats.dartsThrown += 3;
@@ -82,7 +82,7 @@ public class TestDriver {
         p2Expected.stats.dartsThrown += 3;
         testGameState(match, expectedMatch);
 
-        p1.dartThrow(141);
+        p1.dartThrow(141, ifDoubleOut);
         p1Expected.score -= 141;
         p1Expected.stats.scores.add(141);
         p1Expected.stats.addCheckout(141, 1);
