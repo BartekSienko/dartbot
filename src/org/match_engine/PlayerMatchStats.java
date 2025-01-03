@@ -47,4 +47,10 @@ public class PlayerMatchStats {
 
         return scoresCheck && checkoutsCheck && dartsThrownCheck && checkoutsAttemptedCheck && checkoutsSuceededCheck;
     }
+
+    @Override
+    public int hashCode() {
+        return this.scores.hashCode() + this.checkouts.hashCode() + this.dartsThrown
+               + this.checkoutsAttempted + this.checkoutsSuceeded;
+    }
 }

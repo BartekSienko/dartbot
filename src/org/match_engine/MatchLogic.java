@@ -25,4 +25,19 @@ public class MatchLogic {
         return this.doubleOut;
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof MatchLogic otherLogic) {
+            return this.startScore == otherLogic.startScore &&
+                   this.legLimit == otherLogic.legLimit &&
+                   this.doubleOut == otherLogic.doubleOut;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.startScore + this.legLimit;
+    }
+    
 }

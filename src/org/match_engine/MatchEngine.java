@@ -10,9 +10,11 @@ public class MatchEngine {
 
 
     public MatchEngine(Player player1, Player player2, MatchLogic matchRules) {
-        this.player1 = player1;
-        this.player2 = player2;
         this.matchRules = matchRules;
+        this.player1 = player1;
+        this.player1.score = this.matchRules.getStartScore();
+        this.player2 = player2;
+        this.player2.score = this.matchRules.getStartScore();
         this.onThrow = 1;
     }
 
@@ -46,16 +48,27 @@ public class MatchEngine {
             
         }
 
-        if (this.player1.score <= 0) {
-            this.player1.legs++;
-            System.out.println(this.player1.name + " has won the leg!");
-        } else {
-            this.player2.legs++;
-            System.out.println(this.player2.name + " has won the leg!");
+        if (this.ifWonLeg() != null) {
+            if (this.ifWonLeg().equals(this.player1)) {
+                System.out.println(this.player1.name + " has won the leg!");
+            } else {
+                System.out.println(this.player2.name + " has won the leg!");
+            }
+            System.out.println(this.toString());
         }
-        System.out.println(this.toString());
+
     }
 
+    public Player ifWonLeg() {
+        if (this.player1.score <= 0) {
+            this.player1.legs++;
+            return this.player1;
+        } else if (this.player2.score <= 0) {
+            this.player2.legs++;
+            return this.player2;
+        }
+        return null;
+    }
 
     public Player ifWinner(Player player) {
         if (player.legs >= matchRules.getLegLimit()) {
@@ -66,8 +79,22 @@ public class MatchEngine {
 
     @Override
     public String toString() {
-        return "Current Result: " + player1.name + " " + player1.legs + 
-                           ":" + player2.legs + " " + player2.name;
+        return "Current Result: " + player1.name + " " + player1.legs + " (" + player1.score + ")" +
+                           " : " + "(" + player2.score + ") " + player2.legs + " " + player2.name;
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof MatchEngine otherMatch) {
+            return this.player1.equals(otherMatch.player1) &&
+                   this.player2.equals(otherMatch.player2) &&
+                   this.matchRules.equals(otherMatch.matchRules);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.player1.hashCode() + this.player2.hashCode();
+    }
 }
