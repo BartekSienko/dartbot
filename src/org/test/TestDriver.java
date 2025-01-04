@@ -51,13 +51,13 @@ public class TestDriver {
         }
     }
 
-    private static void test9DartGame() {
+    private static void testOneLeg() {
         
         Player p1 = new Player("L. Humphries");
         Player p2 = new Player("L. Littler");
         Player p1Expected = new Player("L. Humphries");
         Player p2Expected = new Player("L. Littler");
-        MatchLogic rules = new MatchLogic(501, 1, true);
+        MatchLogic rules = new MatchLogic(501, 1, true, false);
         MatchEngine match = new MatchEngine(p1, p2, rules);
         MatchEngine expectedMatch = new MatchEngine(p1Expected, p2Expected, rules);
         testGameState(match, expectedMatch);
@@ -90,6 +90,7 @@ public class TestDriver {
         testGameState(match, expectedMatch);
         match.ifWonLeg().equals(p1);
         p1Expected.legs++;
+        p2Expected.score = 0;
         testGameState(match, expectedMatch);
         
         testEquality(p1, p1Expected);
@@ -99,7 +100,7 @@ public class TestDriver {
 
 
     private static void runTests() {
-        test9DartGame();
+        testOneLeg();
     }
 
     public static void main(String[] args) {

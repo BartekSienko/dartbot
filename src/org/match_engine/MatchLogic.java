@@ -5,12 +5,13 @@ public class MatchLogic {
     private final int legLimit;
     //public int setLimit;
     private final boolean doubleOut;
-    //public bool doubleIn;
+    private final boolean doubleIn;
 
-    public MatchLogic(int score, int legs, boolean doubleOut) {
+    public MatchLogic(int score, int legs, boolean doubleOut, boolean doubleIn) {
         this.startScore = score;
         this.legLimit = legs;
         this.doubleOut = doubleOut;
+        this.doubleIn = doubleIn;
     }
 
     public int getStartScore() {
@@ -25,12 +26,17 @@ public class MatchLogic {
         return this.doubleOut;
     }
 
+    public boolean ifDoubleIn() {
+        return this.doubleIn;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (other instanceof MatchLogic otherLogic) {
             return this.startScore == otherLogic.startScore &&
                    this.legLimit == otherLogic.legLimit &&
-                   this.doubleOut == otherLogic.doubleOut;
+                   this.doubleOut == otherLogic.doubleOut &&
+                   this.doubleIn == otherLogic.doubleIn;
         }
         return false;
     }

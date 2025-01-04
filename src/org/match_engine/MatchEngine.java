@@ -21,7 +21,9 @@ public class MatchEngine {
 
     public void newLeg() {
         this.player1.score = matchRules.getStartScore();
+        this.player1.stats.dartsThrownLeg = 0;
         this.player2.score = matchRules.getStartScore();
+        this.player2.stats.dartsThrownLeg = 0;
         if (this.onThrow == 1) {
             this.onThrow = 2;
         } else {
@@ -36,10 +38,10 @@ public class MatchEngine {
         Scanner sc = new Scanner(System.in);
         while (this.player1.score > 0 && this.player2.score > 0) {
             if (playerToThrow == 1) {
-                this.player1.visitThrow(sc, this.matchRules.ifDoubleOut());
+                this.player1.visitThrow(sc, this.matchRules.ifDoubleOut(), this.matchRules.ifDoubleIn());
                 playerToThrow = 2;
             } else {
-                this.player2.visitThrow(sc, this.matchRules.ifDoubleOut());
+                this.player2.visitThrow(sc, this.matchRules.ifDoubleOut(), this.matchRules.ifDoubleIn());
                 playerToThrow = 1;
             }
             System.out.println(this.player1.toString());

@@ -7,12 +7,14 @@ public class PlayerMatchStats {
     public List<Integer> scores;
     public List<Integer> checkouts;
     public int dartsThrown;
+    public int dartsThrownLeg;
     public int checkoutsAttempted;
     public int checkoutsSuceeded;
 
     public PlayerMatchStats() {
         this.scores = new ArrayList<>();
         this.checkouts = new ArrayList<>();
+        this.dartsThrownLeg = 0;
         this.dartsThrown = 0;
         this.checkoutsAttempted = 0;
         this.checkoutsSuceeded = 0;
@@ -21,6 +23,7 @@ public class PlayerMatchStats {
 
     public void addScore(int pointsScored, int dartsThrown) {
         this.dartsThrown += dartsThrown;
+        this.dartsThrownLeg += dartsThrown;
         this.scores.add(pointsScored);
     }
 

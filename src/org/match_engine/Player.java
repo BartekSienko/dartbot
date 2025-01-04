@@ -29,7 +29,7 @@ public class Player {
     }
 
 
-    public void visitThrow(Scanner sc, boolean isDoubleOut) {
+    public void visitThrow(Scanner sc, boolean isDoubleOut, boolean isDoubleIn) {
         int pointsScored = 0;
         boolean legalScore = false;
         System.out.println(this.name + " to throw: ");
@@ -44,7 +44,9 @@ public class Player {
             }
             legalScore = legalScore && checkLegalScore(pointsScored, isDoubleOut);
             if (this.score == pointsScored) {
-                legalScore = legalScore && checkLegalCheckout(pointsScored);
+                legalScore = legalScore && checkLegalDoubleScore(pointsScored, true);
+            } else if (this.stats.dartsThrownLeg == 0 && isDoubleIn) {
+                legalScore = legalScore && checkLegalDoubleScore(pointsScored, false);
             }
         }
 
@@ -67,10 +69,14 @@ public class Player {
         return true;
     }
 
-    public boolean checkLegalCheckout(int pointsScored) {
+    public boolean checkLegalDoubleScore(int pointsScored, boolean outNotIn) {
         Set<Integer> impossibleCheckouts = new HashSet<>(Arrays.asList( 168, 165, 162, 159));
-        if (impossibleCheckouts.contains(pointsScored)) {
-            System.out.println("Impossible checkout inputed");
+        if (impossibleCheckouts.contains(pointsScored) || pointsScored > 170) {
+            if (outNotIn) {
+                System.out.println("Impossible checkout inputed");
+            } else {
+                System.out.println("Impossible start score inputed");
+            }
             return false;
         }
         return true;
