@@ -31,16 +31,6 @@ public class TestDriver {
         System.err.println(className + "." + method +"(" + fileName + ":" + line + ")\n" + msg);
     }
 
-    private static void testGameState(MatchEngine current, MatchEngine expected) {
-        numberOfTests++;
-        if (current.equals(expected)) {
-            passedTests++;
-        } else {
-            printErrorMessage("\nExpected Game State " + current.toString() + "\nto be " + expected.toString());
-            System.err.println("-------");
-        }
-    }
-
     private static void testEquality(Object current, Object expected) {
         numberOfTests++;
         if (current.equals(expected)) {
@@ -49,6 +39,18 @@ public class TestDriver {
             printErrorMessage("\nExpected " + current.toString() + "\nto be " + expected.toString());
             System.err.println("-------");
         }
+    }
+
+    private static void testPlayerMethods() {
+        Player p1 = new Player("M. van Gerwen");
+        Player p1Expected = new Player("M. van Gerwen");
+        testEquality(p1, p1Expected);
+        p1.dartThrow(180, true);
+        p1Expected.score -= 180;
+        p1Expected.stats.scores.add(180);
+        p1Expected.stats.dartsThrown += 3;
+        testEquality(p1, p1Expected);
+        testEquality(p1.toString(), p1Expected.toString());
     }
 
     private static void testOneLeg() {
@@ -60,7 +62,7 @@ public class TestDriver {
         MatchLogic rules = new MatchLogic(501, 1, true, false);
         MatchEngine match = new MatchEngine(p1, p2, rules);
         MatchEngine expectedMatch = new MatchEngine(p1Expected, p2Expected, rules);
-        testGameState(match, expectedMatch);
+        testEquality(match, expectedMatch);
         boolean ifDoubleOut = match.matchRules.ifDoubleOut();
         p1.dartThrow(180, ifDoubleOut);
         p2.dartThrow(100, ifDoubleOut);
@@ -70,7 +72,7 @@ public class TestDriver {
         p2Expected.score -= 100;
         p2Expected.stats.scores.add(100);
         p2Expected.stats.dartsThrown += 3;
-        testGameState(match, expectedMatch);
+        testEquality(match, expectedMatch);
         
         p1.dartThrow(180, ifDoubleOut);
         p2.dartThrow(177, ifDoubleOut);
@@ -80,18 +82,18 @@ public class TestDriver {
         p2Expected.score -= 177;
         p2Expected.stats.scores.add(177);
         p2Expected.stats.dartsThrown += 3;
-        testGameState(match, expectedMatch);
+        testEquality(match, expectedMatch);
 
         p1.dartThrow(141, ifDoubleOut);
         p1Expected.score -= 141;
         p1Expected.stats.scores.add(141);
         p1Expected.stats.addCheckout(141, 1);
         p1Expected.stats.dartsThrown += 3;
-        testGameState(match, expectedMatch);
+        testEquality(match, expectedMatch);
         match.ifWonLeg().equals(p1);
         p1Expected.legs++;
         p2Expected.score = 0;
-        testGameState(match, expectedMatch);
+        testEquality(match, expectedMatch);
         
         testEquality(p1, p1Expected);
         testEquality(match.ifWinner(p1), match.ifWinner(p1Expected));
@@ -100,6 +102,7 @@ public class TestDriver {
 
 
     private static void runTests() {
+        testPlayerMethods();
         testOneLeg();
     }
 
