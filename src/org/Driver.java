@@ -7,7 +7,7 @@ public class Driver {
     public static void main(String[] args) {
         Player player1 = new Player("L. Humphries");
         Player player2 = new Player("L. Littler");
-        MatchLogic rules = new MatchLogic(501, 2, true, true);
+        MatchLogic rules = new MatchLogic(501, 2, true, false);
         
         MatchEngine match = new MatchEngine(player1, player2, rules);
     
@@ -28,7 +28,11 @@ public class Driver {
                 matchFinished = true;
             }
         }
-        match.toString();
-        
+        //match.toString();
+        System.out.println("Match Stats:");
+        System.out.println();
+        System.out.println(player1.toStringStats());
+        System.out.println();
+        System.out.println(player2.toStringStats());
     }
 }
