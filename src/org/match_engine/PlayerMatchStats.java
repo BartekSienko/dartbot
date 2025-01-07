@@ -28,14 +28,17 @@ public class PlayerMatchStats {
         this.scores.add(pointsScored);
     }
 
-    public void addCheckout(int pointsScored, int dartsAtDouble) {
+    public void addCheckout(int pointsScored, int dartsAtDouble, int dartsAtCheckout) {
         this.doublesSucceeded++;
         this.doublesAttempted += dartsAtDouble;
+        this.dartsThrown += dartsAtCheckout;
+        this.dartsThrownLeg += dartsAtCheckout;
+        this.scores.add(pointsScored);
         this.checkouts.add(pointsScored);
     }
 
     public double getMatchAverage() {
-        int sum = 0;
+        double sum = 0;
         for (Integer i : this.scores) {
             sum += i;
         }

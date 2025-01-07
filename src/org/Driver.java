@@ -7,7 +7,7 @@ public class Driver {
     public static void main(String[] args) {
         Player player1 = new Player("L. Humphries");
         Player player2 = new Player("L. Littler");
-        MatchLogic rules = new MatchLogic(501, 2, true, false);
+        MatchLogic rules = new MatchLogic(501, 1, true, false);
         
         MatchEngine match = new MatchEngine(player1, player2, rules);
     

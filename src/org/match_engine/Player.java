@@ -17,18 +17,16 @@ public class Player {
         this.stats = new PlayerMatchStats();
     }
 
-    public void dartThrow(int pointsScored, boolean isDoubleOut, int dartsAtDouble) {
+    public void dartThrow(int pointsScored, boolean isDoubleOut, int dartsAtDouble, int dartsAtCheckout) {
         int remainingScore = this.score - pointsScored;
         if (remainingScore == 0) {
-            this.stats.addCheckout(pointsScored, dartsAtDouble);
-            // TODO: Stub, could throw in less than 3
+            this.stats.addCheckout(pointsScored, dartsAtDouble, dartsAtCheckout);
         } else if (remainingScore <= 40) {
             this.stats.addScore(pointsScored, 3, dartsAtDouble);
         } else {
             this.stats.addScore(pointsScored, 3, dartsAtDouble);
         }
         this.score = remainingScore;
-        //this.stats.addScore(pointsScored, 3);
     }
 
 
@@ -54,9 +52,10 @@ public class Player {
         }
 
         int dartsAtDouble = this.visitDoubles(sc, pointsScored);
+        int dartsAtCheckout = this.visitCheckout(sc, pointsScored, dartsAtDouble);
 
 
-        this.dartThrow(pointsScored, isDoubleOut, dartsAtDouble);
+        this.dartThrow(pointsScored, isDoubleOut, dartsAtDouble, dartsAtCheckout);
 
     }
 
@@ -85,6 +84,27 @@ public class Player {
         return dartsAtDouble;
     }
 
+    public int visitCheckout(Scanner sc, int pointsScored, int dartsAtDouble) {
+        Set<Integer> possibleDartsAtCheckout = getPoissbleDartsForCheckout(pointsScored, dartsAtDouble);
+        if (this.score != pointsScored) {
+            return 0;
+        }
+        if (possibleDartsAtCheckout.size() == 1) {
+            return 3;
+        } else {
+            int dartsAtCheckout = 99;
+            System.out.println("How many darts at checkout? " + possibleDartsAtCheckout.toString());
+            while (!possibleDartsAtCheckout.contains(dartsAtCheckout)) {
+                if (sc.hasNextInt()) {
+                    dartsAtCheckout = sc.nextInt();
+                } else {
+                    sc.next();
+                }
+            }
+            return dartsAtCheckout;
+        }
+
+    }
 
     public boolean checkLegalScore(int pointsScored, boolean isDoubleOut) {
         Set<Integer> impossibleScores = new HashSet<>(Arrays.asList(179, 178, 176, 175, 173, 172, 169, 166, 163));
@@ -114,18 +134,36 @@ public class Player {
         return true;
     }    
 
-/**
-    public Set<Integer> getPoissbleDartsForCheckout(int checkoutScore) {
+
+    public Set<Integer> getPoissbleDartsForCheckout(int checkoutScore, int dartsAtDouble) {
         Set<Integer> onlyThreeDartOuts = new HashSet<>(Arrays.asList(109, 108, 106, 105, 104, 103, 102, 101, 99));
         if (checkoutScore > 110 || onlyThreeDartOuts.contains(checkoutScore)) {
             return new HashSet<>(Arrays.asList(3));
         } else if (checkoutScore != 50 && (checkoutScore > 40 || checkoutScore % 2 == 1)) {
-            return new HashSet<>(Arrays.asList(2,3));
+            Set<Integer> result = new HashSet<>(Arrays.asList(2,3));
+            // On a 2-dart finish, if 2 shots are needed on the double, the checkout has to take 3 darts
+            if (dartsAtDouble == 2) {
+                result.remove(2);
+            }
+            return result;
         } else {
-            return new HashSet<>(Arrays.asList(1,2,3));
+            switch (dartsAtDouble) {
+                case 3 -> { // If we had 3 darts at double, the checkout took 3 darts
+                    return new HashSet<>(Arrays.asList(3));
+                }
+                case 2 -> { // If we had 2 darts at double, the checkout could take 3 darts (double, setup, double)
+                    return new HashSet<>(Arrays.asList(2, 3));
+                }
+                case 1 -> { // If we needed 1 dart at double, the checkout took only 1 dart
+                    return new HashSet<>(Arrays.asList(1));
+                }
+                default -> throw new IllegalArgumentException("dartsAtDouble wasn't 1,2 or 3");
+            }
+    
         }
+        
     }
-*/
+
 
     public Set<Integer> getPossibleDartsAtDouble(int pointsScored) {
         Set<Integer> onlyThreeDartOuts = new HashSet<>(Arrays.asList(109, 108, 106, 105, 104, 103, 102, 101, 99));
