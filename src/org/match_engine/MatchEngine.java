@@ -44,21 +44,62 @@ public class MatchEngine {
                 this.player2.visitThrow(sc, this.matchRules.ifDoubleOut(), this.matchRules.ifDoubleIn());
                 playerToThrow = 1;
             }
-            System.out.println(this.player1.toString());
-            System.out.println(this.player2.toString());
+
+            if (matchRules.isSetPlay) {
+                System.out.println(this.player1.toStringSetPlay());
+                System.out.println(this.player2.toStringSetPlay());
+            } else {
+                System.out.println(this.player1.toString());
+                System.out.println(this.player2.toString());
+            }
             System.out.println();
             
         }
+
         Player hasWonLeg = this.ifWonLeg();
         if (hasWonLeg != null) {
             if (hasWonLeg.equals(this.player1)) {
                 System.out.println(this.player1.name + " has won the leg!");
+                this.player1.updateBestWorstLegs();
             } else {
                 System.out.println(this.player2.name + " has won the leg!");
+                this.player2.updateBestWorstLegs();
             }
+            
+            Player hasWonSet = this.ifWonSet();
+            if (hasWonSet != null) {
+                if (hasWonSet.equals(this.player1)) {
+                    System.out.println(this.player1.name + " has won the set!");
+                } else {
+                    System.out.println(this.player2.name + " has won the set!");
+                }
+            }
+        } 
+
+        if (matchRules.isSetPlay) {
+            System.out.println(this.toStringSetPlay());
+        } else {
             System.out.println(this.toString());
         }
+        
+    }
 
+    public Player ifWonSet() {
+        if (!matchRules.isSetPlay) {
+            return null;
+        }
+        if (this.player1.legs >= matchRules.getLegLimit()) {
+            this.player1.sets++;
+            this.player1.legs = 0;
+            this.player2.legs = 0;
+            return this.player1;
+        } else if (this.player2.legs >= matchRules.getLegLimit()) {
+            this.player2.sets++;
+            this.player1.legs = 0;
+            this.player2.legs = 0;
+            return this.player2;
+        }
+        return null;
     }
 
     public Player ifWonLeg() {
@@ -71,20 +112,35 @@ public class MatchEngine {
             this.player1.score = 0;
             return this.player2;
         }
+
         return null;
     }
 
     public Player ifWinner(Player player) {
-        if (player.legs >= matchRules.getLegLimit()) {
-            return player;
+        if (matchRules.isSetPlay) {
+            if (player.sets >= matchRules.getSetLimit()) {
+                return player;
+            } 
+            return null;
+        } else {
+            if (player.legs >= matchRules.getLegLimit()) {
+                return player;
+            }
+            return null;
         }
-        return null;
     }
 
     @Override
     public String toString() {
-        return "Current Result: " + player1.name + " " + player1.legs + " (" + player1.score + ")" +
-                           " : " + "(" + player2.score + ") " + player2.legs + " " + player2.name;
+        return "Current Result:\nLeg|Scr\n(" + player1.legs + ") (" + player1.score + ") " + player1.name +
+               "\n(" + player2.legs + ") (" + player2.score + ") " + player2.name;
+
+        
+    }
+
+    public String toStringSetPlay() {
+        return "Current Result:\nSet|Leg|Scr\n("  + player1.sets + ") (" + player1.legs + ") (" + player1.score + ") " + player1.name +
+               "\n(" + player2.sets + ") (" + player2.legs + ") (" + player2.score + ") " + player2.name;
     }
 
     @Override

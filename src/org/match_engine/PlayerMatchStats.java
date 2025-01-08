@@ -5,45 +5,59 @@ import java.util.List;
 
 public class PlayerMatchStats {
     public List<Integer> scores;
+    public List<Integer> first9scores;
     public List<Integer> checkouts;
     public int dartsThrown;
     public int dartsThrownLeg;
     public int doublesAttempted;
     public int doublesSucceeded;
+    public int bestLeg;
+    public int worstLeg;
 
     public PlayerMatchStats() {
         this.scores = new ArrayList<>();
+        this.first9scores = new ArrayList<>();
         this.checkouts = new ArrayList<>();
         this.dartsThrownLeg = 0;
         this.dartsThrown = 0;
         this.doublesAttempted = 0;
         this.doublesSucceeded = 0;
+        this.bestLeg = 0;
+        this.worstLeg = 0;
+        
     }
 
 
     public void addScore(int pointsScored, int dartsThrown, int dartsAtDouble) {
+        this.scores.add(pointsScored);
+        if (this.dartsThrownLeg < 9) {
+            this.first9scores.add(pointsScored);
+        }
         this.dartsThrown += dartsThrown;
         this.dartsThrownLeg += dartsThrown;
         this.doublesAttempted += dartsAtDouble;
-        this.scores.add(pointsScored);
     }
 
     public void addCheckout(int pointsScored, int dartsAtDouble, int dartsAtCheckout) {
+        this.scores.add(pointsScored);
+        if (this.dartsThrownLeg < 9) {
+            this.first9scores.add(pointsScored);
+        }
         this.doublesSucceeded++;
         this.doublesAttempted += dartsAtDouble;
         this.dartsThrown += dartsAtCheckout;
         this.dartsThrownLeg += dartsAtCheckout;
-        this.scores.add(pointsScored);
         this.checkouts.add(pointsScored);
     }
 
-    public double getMatchAverage() {
+    public double getListAverage(List<Integer> list) {
         double sum = 0;
-        for (Integer i : this.scores) {
+        for (Integer i : list) {
             sum += i;
         }
-        return (sum / this.dartsThrown) * 3;
+        return sum / list.size();
     }
+
 
     public String getCheckoutSplit() {
         return this.doublesSucceeded + "/" + this.doublesAttempted;
@@ -76,12 +90,16 @@ public class PlayerMatchStats {
 
     public boolean equals(PlayerMatchStats other) {
         boolean scoresCheck = this.scores.equals(other.scores);
+        boolean first9scoresCheck = this.first9scores.equals(other.first9scores);
         boolean checkoutsCheck = this.checkouts.equals(other.checkouts);
         boolean dartsThrownCheck = this.dartsThrown == other.dartsThrown;
         boolean doublesAttemptedCheck = this.doublesAttempted == other.doublesAttempted;
         boolean doublesSucceededCheck = this.doublesSucceeded == other.doublesSucceeded;
+        boolean bestLegCheck = this.bestLeg == other.bestLeg;
+        boolean worstLegCheck = this.worstLeg == other.worstLeg;
 
-        return scoresCheck && checkoutsCheck && dartsThrownCheck && doublesAttemptedCheck && doublesSucceededCheck;
+        return scoresCheck && first9scoresCheck && checkoutsCheck && dartsThrownCheck && doublesAttemptedCheck 
+               && doublesSucceededCheck && bestLegCheck && worstLegCheck;
     }
 
     @Override
@@ -92,8 +110,9 @@ public class PlayerMatchStats {
 
     @Override
     public String toString() {
-        return "\n3-dart Average: " + this.getMatchAverage() + "\nFirst 9 avr.: 0"
+        return "\n3-dart Average: " + this.getListAverage(scores) + "\nFirst 9 avr.: " + this.getListAverage(first9scores)
              + "\nCheckout Rate: " + this.getCheckoutRate() + " %" + "\nCheckouts: " + this.getCheckoutSplit()
-             + "\nHighest Score: " + this.getHighestFromList(scores) + "\nHighest Checkout: " + this.getHighestFromList(checkouts);
+             + "\nHighest Score: " + this.getHighestFromList(scores) + "\nHighest Checkout: " + this.getHighestFromList(checkouts)
+             + "\nBest Leg: " + this.bestLeg + " darts" + "\nWorst Leg: " + this.worstLeg + " darts";
     }
 }

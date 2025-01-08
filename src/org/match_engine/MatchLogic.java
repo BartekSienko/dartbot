@@ -3,13 +3,16 @@ package org.match_engine;
 public class MatchLogic {
     private final int startScore;
     private final int legLimit;
-    //public int setLimit;
+    public boolean isSetPlay;
+    private final int setLimit;
     private final boolean doubleOut;
     private final boolean doubleIn;
 
-    public MatchLogic(int score, int legs, boolean doubleOut, boolean doubleIn) {
+    public MatchLogic(int score, int legs, boolean isSetPlay, int sets, boolean doubleOut, boolean doubleIn) {
         this.startScore = score;
         this.legLimit = legs;
+        this.isSetPlay = isSetPlay;
+        this.setLimit = sets;
         this.doubleOut = doubleOut;
         this.doubleIn = doubleIn;
     }
@@ -20,6 +23,10 @@ public class MatchLogic {
     
     public int getLegLimit() {
         return this.legLimit;
+    }
+
+    public int getSetLimit() {
+        return this.setLimit;
     }
 
     public boolean ifDoubleOut() {
@@ -35,6 +42,8 @@ public class MatchLogic {
         if (other instanceof MatchLogic otherLogic) {
             return this.startScore == otherLogic.startScore &&
                    this.legLimit == otherLogic.legLimit &&
+                   this.isSetPlay == otherLogic.isSetPlay &&
+                   this.setLimit == otherLogic.setLimit &&
                    this.doubleOut == otherLogic.doubleOut &&
                    this.doubleIn == otherLogic.doubleIn;
         }

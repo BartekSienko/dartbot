@@ -7,13 +7,15 @@ public class Player {
     public String name;
     public int score;
     public int legs;
-    //public int sets;
+    public int sets;
     public PlayerMatchStats stats;
+
 
     public Player(String name) {
         this.name = name;
         this.score = 0;
         this.legs = 0;
+        this.sets = 0;
         this.stats = new PlayerMatchStats();
     }
 
@@ -85,10 +87,10 @@ public class Player {
     }
 
     public int visitCheckout(Scanner sc, int pointsScored, int dartsAtDouble) {
-        Set<Integer> possibleDartsAtCheckout = getPoissbleDartsForCheckout(pointsScored, dartsAtDouble);
         if (this.score != pointsScored) {
             return 0;
         }
+        Set<Integer> possibleDartsAtCheckout = getPoissbleDartsForCheckout(pointsScored, dartsAtDouble);
         if (possibleDartsAtCheckout.size() == 1) {
             return 3;
         } else {
@@ -176,9 +178,26 @@ public class Player {
         }
     }
 
+    public void updateBestWorstLegs() {
+        int dartsThrownLeg = this.stats.dartsThrownLeg;
+        PlayerMatchStats legStats = this.stats;
+        if (legStats.bestLeg == 0 && legStats.worstLeg == 0) {
+            legStats.bestLeg = dartsThrownLeg;
+            legStats.worstLeg = dartsThrownLeg;
+        } else if (legStats.bestLeg > dartsThrownLeg) {
+            legStats.bestLeg = dartsThrownLeg;
+        } else if (legStats.worstLeg < dartsThrownLeg) {
+            legStats.worstLeg = dartsThrownLeg;
+        }
+    }
+
     @Override
     public String toString() {
         return "(" + this.legs + ")  " + this.score + "  " + this.name;
+    }
+
+    public String toStringSetPlay() {
+        return "(" + this.sets + ") " + "(" + this.legs + ")  " + this.score + "  " + this.name;
     }
 
     public String toStringStats() {

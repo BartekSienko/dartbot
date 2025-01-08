@@ -7,7 +7,7 @@ public class Driver {
     public static void main(String[] args) {
         Player player1 = new Player("L. Humphries");
         Player player2 = new Player("L. Littler");
-        MatchLogic rules = new MatchLogic(501, 1, true, false);
+        MatchLogic rules = new MatchLogic(501, 2, true, 2, true, false);
         
         MatchEngine match = new MatchEngine(player1, player2, rules);
     
@@ -16,7 +16,9 @@ public class Driver {
 
         System.out.println("Game on!");
         while (!matchFinished) {
-
+            if (match.matchRules.isSetPlay && player1.legs == 0 && player2.legs == 0) {
+                legCount = 0;
+            }
             System.out.println("Leg " + ++legCount + ":");
             match.playLeg();
 
