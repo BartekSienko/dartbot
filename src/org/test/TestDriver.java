@@ -48,7 +48,9 @@ public class TestDriver {
         p1.dartThrow(180, true, 0, 0);
         p1Expected.score -= 180;
         p1Expected.stats.scores.add(180);
+        p1Expected.stats.first9scores.add(180);
         p1Expected.stats.dartsThrown += 3;
+        p1Expected.stats.dartsThrownLeg += 3;
         testEquality(p1, p1Expected);
         testEquality(p1.toString(), p1Expected.toString());
     }
@@ -68,10 +70,12 @@ public class TestDriver {
         p2.dartThrow(100, ifDoubleOut, 0,0);
         p1Expected.score -= 180;
         p1Expected.stats.scores.add(180);
+        p1Expected.stats.first9scores.add(180);
         p1Expected.stats.dartsThrown += 3;
         p1Expected.stats.dartsThrownLeg += 3;
         p2Expected.score -= 100;
         p2Expected.stats.scores.add(100);
+        p2Expected.stats.first9scores.add(100);
         p2Expected.stats.dartsThrown += 3;
         p2Expected.stats.dartsThrownLeg += 3;
         testEquality(match, expectedMatch);
@@ -80,10 +84,12 @@ public class TestDriver {
         p2.dartThrow(177, ifDoubleOut, 0,0);
         p1Expected.score -= 180;
         p1Expected.stats.scores.add(180);
+        p1Expected.stats.first9scores.add(180);
         p1Expected.stats.dartsThrown += 3;
         p1Expected.stats.dartsThrownLeg += 3;
         p2Expected.score -= 177;
         p2Expected.stats.scores.add(177);
+        p2Expected.stats.first9scores.add(177);
         p2Expected.stats.dartsThrown += 3;
         p2Expected.stats.dartsThrownLeg += 3;
         testEquality(match, expectedMatch);
