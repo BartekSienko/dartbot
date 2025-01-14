@@ -3,12 +3,12 @@ A dart app with a AI bot included as the opponent, also with a career mode game 
 
 
 # Current work progress:
-- None, just getting started
-
+- A match engine with manual playing has been implemented
+- Some customization in match types has also been added (301, setplay, double in/out)
+- Began research on datasets to use for the dart bot and planned out a algorithm for the bot
 
 # To be added:
-- Dart match engine with manual playing
 - Dart bot to compete against
-- Customizable match types (301,setplay, double in/out, 2v2)
+- More customizable match types (2v2)
 - Career mode around engine
   
