@@ -59,7 +59,7 @@ public class TestDriver {
         Player p2 = new Player("L. Littler");
         Player p1Expected = new Player("L. Humphries");
         Player p2Expected = new Player("L. Littler");
-        MatchLogic rules = new MatchLogic(501, 1, true, false);
+        MatchLogic rules = new MatchLogic(501, 1, false, 0, true, false);
         MatchEngine match = new MatchEngine(p1, p2, rules);
         MatchEngine expectedMatch = new MatchEngine(p1Expected, p2Expected, rules);
         testEquality(match, expectedMatch);
@@ -101,11 +101,16 @@ public class TestDriver {
         testEquality(match.ifWinner(p1), match.ifWinner(p1Expected));
     }
 
+    private static void testSetPlay() {
+        //Make a sim one leg test that gets called on by the other ones
+    }
+
 
 
     private static void runTests() {
         testPlayerMethods();
         testOneLeg();
+        testSetPlay();
     }
 
     public static void main(String[] args) {
