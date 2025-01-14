@@ -15,7 +15,7 @@ public class MatchEngine {
         this.player1.score = this.matchRules.getStartScore();
         this.player2 = player2;
         this.player2.score = this.matchRules.getStartScore();
-        this.onThrow = 1;
+        this.onThrow = 2; // This is so that the first newLeg() gives player 1 the throw
     }
 
 
