@@ -28,23 +28,21 @@ public class PlayerMatchStats {
     }
 
 
-    public void addScore(int pointsScored, int dartsThrown, int dartsAtDouble) {
+    public void addScore(int pointsScored, int dartsThrown) {
         this.scores.add(pointsScored);
         if (this.dartsThrownLeg < 9) {
             this.first9scores.add(pointsScored);
         }
         this.dartsThrown += dartsThrown;
         this.dartsThrownLeg += dartsThrown;
-        this.doublesAttempted += dartsAtDouble;
     }
 
-    public void addCheckout(int pointsScored, int dartsAtDouble, int dartsAtCheckout) {
+    public void addCheckout(int pointsScored, int dartsAtCheckout) {
         this.scores.add(pointsScored);
         if (this.dartsThrownLeg < 9) {
             this.first9scores.add(pointsScored);
         }
         this.doublesSucceeded++;
-        this.doublesAttempted += dartsAtDouble;
         this.dartsThrown += dartsAtCheckout;
         this.dartsThrownLeg += dartsAtCheckout;
         this.checkouts.add(pointsScored);
@@ -55,7 +53,7 @@ public class PlayerMatchStats {
         for (Integer i : list) {
             sum += i;
         }
-        return sum / list.size();
+        return Math.round(sum / list.size() * 10) / 10;
     }
 
 
@@ -67,7 +65,7 @@ public class PlayerMatchStats {
         if (this.doublesAttempted == 0) {
             return 0;
         }
-        return ((double)this.doublesSucceeded / this.doublesAttempted) * 100;
+        return Math.round(((double)this.doublesSucceeded / this.doublesAttempted) * 10000) / 100;
     }
 
     public int getHighestFromList(List<Integer> list) {
@@ -110,7 +108,7 @@ public class PlayerMatchStats {
 
     @Override
     public String toString() {
-        return "\n3-dart Average: " + this.getListAverage(scores) + "\nFirst 9 avr.: " + this.getListAverage(first9scores)
+        return "\n3-dart Average: " + (this.getListAverage(scores)) + "\nFirst 9 avr.: " + this.getListAverage(first9scores)
              + "\nCheckout Rate: " + this.getCheckoutRate() + " %" + "\nCheckouts: " + this.getCheckoutSplit()
              + "\nHighest Score: " + this.getHighestFromList(scores) + "\nHighest Checkout: " + this.getHighestFromList(checkouts)
              + "\nBest Leg: " + this.bestLeg + " darts" + "\nWorst Leg: " + this.worstLeg + " darts";
