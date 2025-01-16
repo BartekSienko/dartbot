@@ -1,4 +1,5 @@
-package org.match_engine;
+package org.match_engine.dartbot;
+
 
 public class ThrowTarget {
     public int multiplier;

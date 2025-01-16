@@ -1,6 +1,7 @@
-package org.match_engine;
+package org.match_engine.dartbot;
 
-
+import java.util.*;
+import org.match_engine.*;
 
 public class DartBot extends Player {
     public int dartsInHand;
@@ -10,10 +11,10 @@ public class DartBot extends Player {
         this.dartsInHand = 0;
     }
 
-    public ThrowTarget getThrowTarget(boolean isDoubleInStart) {
+    public ThrowTarget getThrowTarget(boolean isDoubleIn) {
         // Note: Bogey score => A score which cannot be taken out in 3 darts
         int remainingScore = this.score;
-        if (isDoubleInStart) {
+        if (isDoubleIn) {
             return new ThrowTarget(2, 20);
         }
         
@@ -148,6 +149,51 @@ public class DartBot extends Player {
         throw new RuntimeException("Didn't create target for score: " + this.score + " with " + this.dartsInHand + " darts left");
     }
 
+    @Override
+    public void visitThrow(Scanner sc, boolean isDoubleOut, boolean isDoubleIn) {
+        this.dartsInHand = 3;
+        int scoreBeforeVisit = this.score;
+        int totalThisVisit = 0;
+
+        while (dartsInHand > 0) {
+            int currentThrow = oneDartThrow(isDoubleIn);
+            totalThisVisit += currentThrow;
+            this.score -= currentThrow;
+            this.dartsInHand--;
+            if (this.score == 1 || this.score < 0) {
+                this.score = scoreBeforeVisit;
+                this.dartThrow(0, isDoubleOut, 3);
+                System.out.println("Bust score!");
+                return;
+            } else if ((this.score) == 0) {
+                break;
+            }
+        }
+
+        this.dartThrow(totalThisVisit, isDoubleOut, 3 - dartsInHand);
+
+    }
+
+    public int oneDartThrow(boolean isDoubleIn) {
+        ThrowTarget target = getThrowTarget(isDoubleIn);
+        DistributionTable distroTable;
+        if (target.number == 25) {
+            distroTable = new DistributionTable("Bullseye");
+            this.stats.doublesAttempted++;
+        } else if (target.multiplier == 3) {
+            distroTable = new DistributionTable("Trebles");
+        } else if (target.multiplier == 2) {
+            distroTable = new DistributionTable("Doubles");
+            this.stats.doublesAttempted++;
+        } else {
+            distroTable = new DistributionTable("Singles");
+        }
+
+        int rng = (int)(Math.random() * 100);
+
+        return distroTable.getThrowResult(rng, target.number);
+
+    }
 
 
 
