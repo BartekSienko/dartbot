@@ -10,9 +10,13 @@ public class DartBot extends Player {
         this.dartsInHand = 0;
     }
 
-    public ThrowTarget getThrowTarget() {
+    public ThrowTarget getThrowTarget(boolean isDoubleInStart) {
         // Note: Bogey score => A score which cannot be taken out in 3 darts
         int remainingScore = this.score;
+        if (isDoubleInStart) {
+            return new ThrowTarget(2, 20);
+        }
+        
         if (this.dartsInHand == 3 && remainingScore % 3 == 0 && (123 <= remainingScore && remainingScore <= 129)) {
             // Aims for Treble 19 to leave (Treble + Bull) finish if it hits Single 19
             return new ThrowTarget(3, 19); 

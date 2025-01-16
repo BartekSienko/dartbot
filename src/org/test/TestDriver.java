@@ -77,24 +77,30 @@ public class TestDriver {
         ThrowTarget t18 = new ThrowTarget(3, 18);
         ThrowTarget tt;
 
-        // Special case 1: 3 Darts 129,126,123 to go, aims for T19
+
+        // Special case 1: Double-In with Start Score
+        bot.score = 501;
+        tt = bot.getThrowTarget(true);
+        testEquality(tt, new ThrowTarget(2, 20));
+
+        // Special case 2: 3 Darts 129,126,123 to go, aims for T19
         bot.score = 129;
         bot.dartsInHand = 3;
         for (; 123 <= bot.score; bot.score -= 3) {
-            tt = bot.getThrowTarget();
+            tt = bot.getThrowTarget(false);
             testEquality(tt, t19);
         }
-        // Special case 2: 3 Darts 128,125,122 to go, aims for T18
+        // Special case 3: 3 Darts 128,125,122 to go, aims for T18
         bot.score = 128;
         for (; 122 <= bot.score; bot.score -= 3) {
-            tt = bot.getThrowTarget();
+            tt = bot.getThrowTarget(false);
             testEquality(tt, t18);
         }
-        // Special case 3: 2 Darts 110,107,104,101 to go, aims for T20,19,18,17 respectively
+        // Special case 4: 2 Darts 110,107,104,101 to go, aims for T20,19,18,17 respectively
         bot.score = 110;
         bot.dartsInHand = 2;
         for (; 101 <= bot.score; bot.score -= 3) {
-            tt = bot.getThrowTarget();
+            tt = bot.getThrowTarget(false);
             int targetedTreble = (bot.score - 50) / 3;
             testEquality(tt, new ThrowTarget(3, targetedTreble));
         }
@@ -102,12 +108,12 @@ public class TestDriver {
         bot.score = 501;
         bot.dartsInHand = 1;
         for (; 190 <= bot.score; bot.score--) {
-            tt = bot.getThrowTarget();
+            tt = bot.getThrowTarget(false);
             testEquality(tt, t20);
         }
         // Case 2: Remaining Score (189-179) aims for T19,18 to not leave a 3 dart finish
         for (; 179 <= bot.score; bot.score--) {
-            tt = bot.getThrowTarget();
+            tt = bot.getThrowTarget(false);
             ThrowTarget expected;
             if (bot.score == 179 || (bot.score % 3 == 0 && bot.score != 180)) {
                 expected = t19;
@@ -120,19 +126,19 @@ public class TestDriver {
         }
         // Case 1.5: Remaining Score (178-100) aims for T20
         for (; 100 <= bot.score; bot.score--) {
-            tt = bot.getThrowTarget();
+            tt = bot.getThrowTarget(false);
             testEquality(tt, t20);
         }
         // Case 3: Remaining Score 99-98, aims for T19-T20 respectively
-        tt = bot.getThrowTarget();
+        tt = bot.getThrowTarget(false);
         testEquality(tt, t19);
         bot.score--;
-        tt = bot.getThrowTarget();
+        tt = bot.getThrowTarget(false);
         testEquality(tt, t20);
         bot.score--;
         // Case 4: Remaining Score 98-61, aims to setup D20,18,16,12,10,8
         for(; 61 <= bot.score; bot.score--) {
-            tt = bot.getThrowTarget();
+            tt = bot.getThrowTarget(false);
             ThrowTarget expected;
             List<Integer> t19Specials = new ArrayList<>(Arrays.asList(95, 79));
             if (t19Specials.contains(bot.score)) {
@@ -154,19 +160,19 @@ public class TestDriver {
         }
         // Case 5: Remaining Score 60-57, aims to setup D20
         for (; 57 <= bot.score; bot.score--) {
-            tt = bot.getThrowTarget();
+            tt = bot.getThrowTarget(false);
             ThrowTarget expected = new ThrowTarget(1, (bot.score - 40));
             testEquality(tt, expected);
         }
         // Case 6: Remaining Score 56-53, aims to setup D20 or D18
         for (; 53 <= bot.score; bot.score--) {
-            tt = bot.getThrowTarget();
+            tt = bot.getThrowTarget(false);
             List<Integer> possibleTargets = new ArrayList<>(Arrays.asList(bot.score - 40, bot.score - 36));
             testContains(tt.number, possibleTargets);
         }
         // Case 7: Remaining Score 52-41, aims to setup D20, D18, D16 or goes for bullseye
         for (; 41 <= bot.score; bot.score--) {
-            tt = bot.getThrowTarget();
+            tt = bot.getThrowTarget(false);
             if (bot.score == 50) {
                 testEquality(tt, new ThrowTarget(2, 25));
             } else {
@@ -176,39 +182,39 @@ public class TestDriver {
         }
         // Case 8: Remaining Score 40-2 (evens), goes for Double
         for (; 2 <= bot.score; bot.score -= 2) {
-            tt = bot.getThrowTarget();
+            tt = bot.getThrowTarget(false);
             testEquality(tt, new ThrowTarget(2, bot.score / 2));
         }
         // Case 9: Remaining Score 39-33 (odds), aims to setup D18, D16, D12
         bot.score = 39;
         for (; 33 <= bot.score; bot.score -= 2) {
-            tt = bot.getThrowTarget();
+            tt = bot.getThrowTarget(false);
             List<Integer> possibleTargets = new ArrayList<>(Arrays.asList(bot.score - 36, bot.score - 32, bot.score - 24));
             testContains(tt.number, possibleTargets);
         }
         // Case 10: Remaining Score 31-25 (odds), aims to setup D12 or D8
         for (; 25 <= bot.score; bot.score -= 2) {
-            tt = bot.getThrowTarget();
+            tt = bot.getThrowTarget(false);
             List<Integer> possibleTargets = new ArrayList<>(Arrays.asList(bot.score - 24, bot.score - 16));
             testContains(tt.number, possibleTargets);
         }
         // Case 11: Remaining Score 23-17 (odds), aims to setup D8
         for (; 17 <= bot.score; bot.score -= 2) {
-            tt = bot.getThrowTarget();
+            tt = bot.getThrowTarget(false);
             testEquality(tt, new ThrowTarget(1, bot.score - 16));
         }
-        // Case 11: Remaining Score 15-9 (odds), aims to setup D4
+        // Case 12: Remaining Score 15-9 (odds), aims to setup D4
         for (; 9 <= bot.score; bot.score -= 2) {
-            tt = bot.getThrowTarget();
+            tt = bot.getThrowTarget(false);
             testEquality(tt, new ThrowTarget(1, bot.score - 8));
         }
-        // Case 11: Remaining Score 7-5 (odds), aims to setup D2
+        // Case 13: Remaining Score 7-5 (odds), aims to setup D2
         for (; 5 <= bot.score; bot.score -= 2) {
-            tt = bot.getThrowTarget();
+            tt = bot.getThrowTarget(false);
             testEquality(tt, new ThrowTarget(1, bot.score - 4));
         }
-        // Case 12: Remaining Score 3, aims to setup D1
-        tt = bot.getThrowTarget();
+        // Case 14: Remaining Score 3, aims to setup D1
+        tt = bot.getThrowTarget(false);
         testEquality(tt, new ThrowTarget(1, 1));
     }
 
