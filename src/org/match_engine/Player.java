@@ -19,16 +19,12 @@ public class Player {
         this.stats = new PlayerMatchStats();
     }
 
-    public void dartThrow(int pointsScored, boolean isDoubleOut, int dartsAtDouble, int dartsAtCheckout) {
-        int remainingScore = this.score - pointsScored;
-        if (remainingScore == 0) {
-            this.stats.addCheckout(pointsScored, dartsAtDouble, dartsAtCheckout);
-        } else if (remainingScore <= 40) {
-            this.stats.addScore(pointsScored, 3, dartsAtDouble);
+    public void dartThrow(int pointsScored, boolean isDoubleOut, int dartsAtCheckout) {
+        if (this.score == 0) {
+            this.stats.addCheckout(pointsScored, dartsAtCheckout);
         } else {
-            this.stats.addScore(pointsScored, 3, dartsAtDouble);
+            this.stats.addScore(pointsScored, 3);
         }
-        this.score = remainingScore;
     }
 
 
@@ -54,10 +50,12 @@ public class Player {
         }
 
         int dartsAtDouble = this.visitDoubles(sc, pointsScored);
+        this.stats.doublesAttempted += dartsAtDouble;
         int dartsAtCheckout = this.visitCheckout(sc, pointsScored, dartsAtDouble);
+        
 
-
-        this.dartThrow(pointsScored, isDoubleOut, dartsAtDouble, dartsAtCheckout);
+        this.score -= pointsScored;
+        this.dartThrow(pointsScored, isDoubleOut, dartsAtCheckout);
 
     }
 

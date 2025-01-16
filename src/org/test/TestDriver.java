@@ -4,6 +4,7 @@ import java.lang.StackWalker.StackFrame;
 import java.util.stream.Collectors;
 import java.util.*;
 import org.match_engine.*;
+import org.match_engine.dartbot.*;
 
 public class TestDriver {
     private static int numberOfTests = 0;
@@ -57,7 +58,7 @@ public class TestDriver {
         Player p1 = new Player("M. van Gerwen");
         Player p1Expected = new Player("M. van Gerwen");
         testEquality(p1, p1Expected);
-        p1.dartThrow(180, true, 0, 0);
+        p1.dartThrow(180, true, 0);
         p1Expected.score -= 180;
         p1Expected.stats.scores.add(180);
         p1Expected.stats.first9scores.add(180);
@@ -229,8 +230,8 @@ public class TestDriver {
         MatchEngine expectedMatch = new MatchEngine(p1Expected, p2Expected, rules);
         testEquality(match, expectedMatch);
         boolean ifDoubleOut = match.matchRules.ifDoubleOut();
-        p1.dartThrow(180, ifDoubleOut, 0, 0);
-        p2.dartThrow(100, ifDoubleOut, 0,0);
+        p1.dartThrow(180, ifDoubleOut, 0);
+        p2.dartThrow(100, ifDoubleOut,0);
         p1Expected.score -= 180;
         p1Expected.stats.scores.add(180);
         p1Expected.stats.first9scores.add(180);
@@ -243,8 +244,8 @@ public class TestDriver {
         p2Expected.stats.dartsThrownLeg += 3;
         testEquality(match, expectedMatch);
         
-        p1.dartThrow(180, ifDoubleOut, 0,0);
-        p2.dartThrow(177, ifDoubleOut, 0,0);
+        p1.dartThrow(180, ifDoubleOut, 0);
+        p2.dartThrow(177, ifDoubleOut, 0);
         p1Expected.score -= 180;
         p1Expected.stats.scores.add(180);
         p1Expected.stats.first9scores.add(180);
@@ -257,9 +258,11 @@ public class TestDriver {
         p2Expected.stats.dartsThrownLeg += 3;
         testEquality(match, expectedMatch);
 
-        p1.dartThrow(141, ifDoubleOut, 1,3);
+        p1.dartThrow(141, ifDoubleOut, 3);
+        p1.stats.doublesAttempted++;
         p1Expected.score -= 141;
-        p1Expected.stats.addCheckout(141, 1,3);
+        p1Expected.stats.doublesAttempted++;
+        p1Expected.stats.addCheckout(141 ,3);
         testEquality(match, expectedMatch);
         match.ifWonLeg().equals(p1);
         p1Expected.legs++;
