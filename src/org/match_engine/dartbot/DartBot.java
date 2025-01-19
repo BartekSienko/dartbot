@@ -5,10 +5,12 @@ import org.match_engine.*;
 
 public class DartBot extends Player {
     public int dartsInHand;
+    public int scoreThisVisit;
 
     public DartBot(String name){
         super(name);
         this.dartsInHand = 0;
+        this.scoreThisVisit = 0;
     }
 
     public ThrowTarget getThrowTarget(boolean isDoubleIn) {
@@ -28,11 +30,15 @@ public class DartBot extends Player {
             // Aims for Treble (20,19,18,17) to leave Bull finish if it hits the aimed Treble
             return new ThrowTarget(3, (remainingScore - 50) / 3); 
         } else if (remainingScore >= 190 || ((101 <= remainingScore && remainingScore <= 180) && remainingScore != 179)){
-            // Aims for Treble 20 to get closer to a finish
-            return new ThrowTarget(3, 20);
+            // Aims for Treble 20 to get closer to a finish, potentially going for Treble 19 or 18
+            ThrowTarget target = new ThrowTarget(3, 20);
+            target.getVariance(this.dartsInHand, this.scoreThisVisit);
+            return target;
         } else if ((181 <= remainingScore && remainingScore <= 187) && remainingScore % 3 == 1) {
-            // Aims for Treble 20 to get closer to a finish
-            return new ThrowTarget(3, 20);
+            // Aims for Treble 20 to get closer to a finish, , potentially going for Treble 19 or 18
+            ThrowTarget target = new ThrowTarget(3, 20);
+            target.getVariance(this.dartsInHand, this.scoreThisVisit);
+            return target;
         } else if (((183 <= remainingScore && remainingScore <= 189) && remainingScore % 3 == 0) || remainingScore == 179) {
             // Aims for Treble 19 as Single 20 would leave a bogey score
             return new ThrowTarget(3, 19);
