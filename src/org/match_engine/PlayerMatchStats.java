@@ -53,7 +53,10 @@ public class PlayerMatchStats {
         for (Integer i : list) {
             sum += i;
         }
-        return Math.round(sum / list.size() * 10) / 10;
+        if (list.equals(first9scores)) {
+            return Math.round((sum / list.size()) * 10.0) / 10.0;
+        }
+        return Math.round((sum / this.dartsThrown) * 30.0 ) / 10.0;
     }
 
 
@@ -65,7 +68,7 @@ public class PlayerMatchStats {
         if (this.doublesAttempted == 0) {
             return 0;
         }
-        return Math.round(((double)this.doublesSucceeded / this.doublesAttempted) * 10000) / 100;
+        return Math.round(((double)this.doublesSucceeded / this.doublesAttempted) * 10000) / 100.0;
     }
 
     public int getHighestFromList(List<Integer> list) {
