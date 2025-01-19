@@ -122,7 +122,7 @@ public class Player {
     }
 
     public boolean checkLegalDoubleScore(int pointsScored, boolean outNotIn) {
-        Set<Integer> impossibleCheckouts = new HashSet<>(Arrays.asList( 168, 165, 162, 159));
+        Set<Integer> impossibleCheckouts = new HashSet<>(Arrays.asList(169, 168, 166, 165, 163, 162, 159));
         if (impossibleCheckouts.contains(pointsScored) || pointsScored > 170) {
             if (outNotIn) {
                 System.out.println("Impossible checkout inputed");

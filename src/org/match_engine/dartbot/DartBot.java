@@ -159,14 +159,14 @@ public class DartBot extends Player {
     public void visitThrow(Scanner sc, boolean isDoubleOut, boolean isDoubleIn) {
         this.dartsInHand = 3;
         int scoreBeforeVisit = this.score;
-        int totalThisVisit = 0;
-
+        this.scoreThisVisit = 0;
         while (dartsInHand > 0) {
             int currentThrow = oneDartThrow(isDoubleIn);
-            totalThisVisit += currentThrow;
+            this.scoreThisVisit += currentThrow;
             this.score -= currentThrow;
             this.dartsInHand--;
-            if (this.score == 1 || this.score < 0) {
+            if (this.score == 1 || this.score < 0 || (this.score == 0 
+                                                      && !checkLegalDoubleScore(this.scoreThisVisit, isDoubleIn))) {
                 this.score = scoreBeforeVisit;
                 this.dartThrow(0, isDoubleOut, 3);
                 System.out.println("Bust score!");
@@ -176,7 +176,7 @@ public class DartBot extends Player {
             }
         }
 
-        this.dartThrow(totalThisVisit, isDoubleOut, 3 - dartsInHand);
+        this.dartThrow(this.scoreThisVisit, isDoubleOut, 3 - dartsInHand);
 
     }
 
@@ -185,12 +185,16 @@ public class DartBot extends Player {
         DistributionTable distroTable;
         if (target.number == 25) {
             distroTable = new DistributionTable("Bullseye");
-            this.stats.doublesAttempted++;
+            if (this.score == 50) {
+                this.stats.doublesAttempted++;
+            }
         } else if (target.multiplier == 3) {
             distroTable = new DistributionTable("Trebles");
         } else if (target.multiplier == 2) {
             distroTable = new DistributionTable("Doubles");
-            this.stats.doublesAttempted++;
+            if (this.score <= 40) {
+                this.stats.doublesAttempted++;
+            }
         } else {
             distroTable = new DistributionTable("Singles");
         }

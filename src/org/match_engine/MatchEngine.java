@@ -38,10 +38,12 @@ public class MatchEngine {
         Scanner sc = new Scanner(System.in);
         while (this.player1.score > 0 && this.player2.score > 0) {
             if (playerToThrow == 1) {
-                this.player1.visitThrow(sc, this.matchRules.ifDoubleOut(), this.matchRules.ifDoubleIn());
+                boolean doubleInOpener = this.matchRules.ifDoubleIn() && this.player1.score == this.matchRules.getStartScore();
+                this.player1.visitThrow(sc, this.matchRules.ifDoubleOut(), doubleInOpener);
                 playerToThrow = 2;
             } else {
-                this.player2.visitThrow(sc, this.matchRules.ifDoubleOut(), this.matchRules.ifDoubleIn());
+                boolean doubleInOpener = this.matchRules.ifDoubleIn() && this.player2.score == this.matchRules.getStartScore();
+                this.player2.visitThrow(sc, this.matchRules.ifDoubleOut(), doubleInOpener);
                 playerToThrow = 1;
             }
 
