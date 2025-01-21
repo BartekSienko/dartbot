@@ -1,8 +1,8 @@
 package org.test;
 
 import java.lang.StackWalker.StackFrame;
-import java.util.stream.Collectors;
 import java.util.*;
+import java.util.stream.Collectors;
 import org.match_engine.*;
 import org.match_engine.dartbot.*;
 
@@ -55,8 +55,8 @@ public class TestDriver {
 
 
     private static void testPlayerMethods() {
-        Player p1 = new Player("M. van Gerwen");
-        Player p1Expected = new Player("M. van Gerwen");
+        DartPlayer p1 = new DartPlayer("M. van Gerwen", 10);
+        DartPlayer p1Expected = new DartPlayer("M. van Gerwen", 10);
         testEquality(p1, p1Expected);
         p1.dartThrow(180, true, 0);
         p1Expected.score -= 180;
@@ -70,7 +70,7 @@ public class TestDriver {
 
     private static void testDartBotTargetLocating() {
         // Test essentially just checks that we don't get a RuntimeException
-        DartBot bot = new DartBot("Bot");
+        DartBot bot = new DartBot("Bot", 10);
         
         // Some often used ThrowTargets
         ThrowTarget t20 = new ThrowTarget(3, 20);
@@ -221,10 +221,10 @@ public class TestDriver {
 
     private static void testOneLeg() {
         
-        Player p1 = new Player("L. Humphries");
-        Player p2 = new Player("L. Littler");
-        Player p1Expected = new Player("L. Humphries");
-        Player p2Expected = new Player("L. Littler");
+        DartPlayer p1 = new DartPlayer("L. Humphries", 10);
+        DartPlayer p2 = new DartPlayer("L. Littler", 10);
+        DartPlayer p1Expected = new DartPlayer("L. Humphries", 10);
+        DartPlayer p2Expected = new DartPlayer("L. Littler", 10);
         MatchLogic rules = new MatchLogic(501, 1, false, 0, true, false);
         MatchEngine match = new MatchEngine(p1, p2, rules);
         MatchEngine expectedMatch = new MatchEngine(p1Expected, p2Expected, rules);
