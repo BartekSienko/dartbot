@@ -3,12 +3,18 @@ package org.match_engine.dartbot;
 import java.util.*;
 import org.match_engine.*;
 
-public class DartBot extends Player {
+public class DartBot extends DartPlayer {
     public int dartsInHand;
     public int scoreThisVisit;
+    public List<DistributionTable> distroTables;
 
-    public DartBot(String name){
-        super(name);
+    public DartBot(String name, int rating){
+        super(name, rating);
+        this.distroTables = new ArrayList<>();
+        this.distroTables.add(new DistributionTable("Trebles", rating));
+        this.distroTables.add(new DistributionTable("Doubles", rating));
+        this.distroTables.add(new DistributionTable("Singles", rating));
+        this.distroTables.add(new DistributionTable("Bullseye", rating));
         this.dartsInHand = 0;
         this.scoreThisVisit = 0;
     }
@@ -184,22 +190,22 @@ public class DartBot extends Player {
         ThrowTarget target = getThrowTarget(isDoubleIn);
         DistributionTable distroTable;
         if (target.number == 25) {
-            distroTable = new DistributionTable("Bullseye");
+            distroTable = this.distroTables.get(3);
             if (this.score == 50) {
                 this.stats.doublesAttempted++;
             }
         } else if (target.multiplier == 3) {
-            distroTable = new DistributionTable("Trebles");
+            distroTable = this.distroTables.get(0);
         } else if (target.multiplier == 2) {
-            distroTable = new DistributionTable("Doubles");
+            distroTable = this.distroTables.get(1);
             if (this.score <= 40) {
                 this.stats.doublesAttempted++;
             }
         } else {
-            distroTable = new DistributionTable("Singles");
+            distroTable = this.distroTables.get(2);
         }
 
-        int rng = (int)(Math.random() * 100);
+        int rng = (int)(Math.random() * 1000);
 
         return distroTable.getThrowResult(rng, target.number);
 
