@@ -3,13 +3,13 @@ package org.match_engine;
 import java.util.Scanner;
 
 public class MatchEngine {
-    public Player player1;
-    public Player player2;
+    public DartPlayer player1;
+    public DartPlayer player2;
     public final MatchLogic matchRules;
     public int onThrow;
 
 
-    public MatchEngine(Player player1, Player player2, MatchLogic matchRules) {
+    public MatchEngine(DartPlayer player1, DartPlayer player2, MatchLogic matchRules) {
         this.matchRules = matchRules;
         this.player1 = player1;
         this.player1.score = this.matchRules.getStartScore();
@@ -58,7 +58,7 @@ public class MatchEngine {
             
         }
 
-        Player hasWonLeg = this.ifWonLeg();
+        DartPlayer hasWonLeg = this.ifWonLeg();
         if (hasWonLeg != null) {
             if (hasWonLeg.equals(this.player1)) {
                 System.out.println(this.player1.name + " has won the leg!");
@@ -68,7 +68,7 @@ public class MatchEngine {
                 this.player2.updateBestWorstLegs();
             }
             
-            Player hasWonSet = this.ifWonSet();
+            DartPlayer hasWonSet = this.ifWonSet();
             if (hasWonSet != null) {
                 if (hasWonSet.equals(this.player1)) {
                     System.out.println(this.player1.name + " has won the set!");
@@ -86,7 +86,7 @@ public class MatchEngine {
         
     }
 
-    public Player ifWonSet() {
+    public DartPlayer ifWonSet() {
         if (!matchRules.isSetPlay) {
             return null;
         }
@@ -104,7 +104,7 @@ public class MatchEngine {
         return null;
     }
 
-    public Player ifWonLeg() {
+    public DartPlayer ifWonLeg() {
         if (this.player1.score <= 0) {
             this.player1.legs++;
             this.player2.score = 0;
@@ -118,7 +118,7 @@ public class MatchEngine {
         return null;
     }
 
-    public Player ifWinner(Player player) {
+    public DartPlayer ifWinner(DartPlayer player) {
         if (matchRules.isSetPlay) {
             if (player.sets >= matchRules.getSetLimit()) {
                 return player;
