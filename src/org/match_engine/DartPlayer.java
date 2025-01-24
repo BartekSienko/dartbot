@@ -1,6 +1,7 @@
 package org.match_engine;
 
 import java.util.*;
+import org.tournament.*;
 
 
 
@@ -10,10 +11,10 @@ public class DartPlayer {
     public int legs;
     public int sets;
     public PlayerMatchStats stats;
-    public int rating;
+    public double rating;
 
 
-    public DartPlayer(String name, int rating) {
+    public DartPlayer(String name, double rating) {
         this.name = name;
         this.rating = rating;
         this.score = 0;

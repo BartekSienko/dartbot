@@ -8,7 +8,7 @@ public class DartBot extends DartPlayer {
     public int scoreThisVisit;
     public List<DistributionTable> distroTables;
 
-    public DartBot(String name, int rating){
+    public DartBot(String name, double rating){
         super(name, rating);
         this.distroTables = new ArrayList<>();
         this.distroTables.add(new DistributionTable("Trebles", rating));

@@ -9,7 +9,7 @@ public class DistributionTable {
                                                                 3, 19, 7, 16, 8, 11, 14, 9, 12, 5, 20, 1));
 
 
-    public DistributionTable(String id, int rating) {
+    public DistributionTable(String id, double rating) {
         this.identifier = id;
         switch (id) {
             case "Trebles":
@@ -42,8 +42,8 @@ public class DistributionTable {
         distroTable.add((int) Math.round(restChance * 0.86));
 
         // Add chances for treble/single of segments left and right of target respectively
-        int trebleSideChance = (int) Math.round(restChance * 0.043);
-        int singleSideChance = (int) Math.round(restChance * 0.097);
+        int trebleSideChance = (int) Math.round(restChance * 0.043 / 2);
+        int singleSideChance = (int) Math.round(restChance * 0.097 / 2);
         distroTable.add(trebleSideChance);
         distroTable.add(singleSideChance);
         distroTable.add(trebleSideChance);
