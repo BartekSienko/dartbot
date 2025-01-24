@@ -12,6 +12,7 @@ public class DartPlayer {
     public int sets;
     public PlayerMatchStats stats;
     public double rating;
+    public OverallPrizeMoney prizeMoney;
 
 
     public DartPlayer(String name, double rating) {
@@ -21,6 +22,7 @@ public class DartPlayer {
         this.legs = 0;
         this.sets = 0;
         this.stats = new PlayerMatchStats();
+        this.prizeMoney = new OverallPrizeMoney();
     }
 
     public void dartThrow(int pointsScored, boolean isDoubleOut, int dartsAtCheckout) {
