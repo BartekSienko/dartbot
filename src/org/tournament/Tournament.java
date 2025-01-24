@@ -23,6 +23,24 @@ public class Tournament {
         this.prize_money = prize_money;
     }
 
+    public void simTournament() {
+        Scanner sc = new Scanner(System.in);
+        Deque<DartPlayer> round1 = this.players.get(0);
+        Deque<DartPlayer> round2;
+        try {
+            round2 = this.players.get(1);
+        } catch (IndexOutOfBoundsException ie) {
+            round2 = new ArrayDeque<>();
+        }
+
+        this.simRound(sc, 1, round1, round2);
+        
+        this.generatePrizeMoney();
+
+        System.out.println("The winner of " + this.name + " is " + this.eliminated.get(0).name + "!");
+
+    } 
+
     public void simRound(Scanner sc, int roundNr, Deque<DartPlayer> competingPlayers, 
                     Deque<DartPlayer> nextRound) {
         String roundName;
@@ -45,22 +63,30 @@ public class Tournament {
             DartPlayer p2 = competingPlayers.removeLast();
             System.out.println("-------------");
             this.printMatchInfo(p1.name, p2.name);
+            DartPlayer p1Playing = null;
+            DartPlayer p2Playing = null;
             int input = this.getIntInRange(sc, 0, 3);
             switch(input) {
                 case 0:
-                    p1 = new DartBot(p1.name, p1.rating);
-                    p2 = new DartBot(p2.name, p2.rating);
+                    p1Playing = new DartBot(p1.name, p1.rating);
+                    p2Playing = new DartBot(p2.name, p2.rating);
                     break;
                 case 1:
-                    p2 = new DartBot(p2.name, p2.rating);
+                    p1Playing = new DartPlayer(p1.name, p1.rating);
+                    p2Playing = new DartBot(p2.name, p2.rating);
                     break;
                 case 2:
-                    p1 = new DartBot(p1.name, p1.rating);
+                    p1Playing = new DartBot(p1.name, p1.rating);
+                    p2Playing = new DartPlayer(p2.name, p2.rating);
+                    break;
+                case 3:
+                    p1Playing = new DartPlayer(p1.name, p1.rating);
+                    p2Playing = new DartPlayer(p2.name, p2.rating);
                     break;
             }
-            MatchDriver matchDriver = new MatchDriver(p1, p2, rulesets.get(roundNr-1));
+            MatchDriver matchDriver = new MatchDriver(p1Playing, p2Playing, rulesets.get(roundNr-1));
             DartPlayer winner = matchDriver.runMatch();
-            if (p1.equals(winner)) {
+            if (p1Playing.equals(winner)) {
                 nextRound.add(p1);
                 eliminated.addFirst(p2);
             } else {
@@ -114,14 +140,29 @@ public class Tournament {
         }
     }
 
+    public void generatePrizeMoney() {
+        if (this.prize_money == null) {
+            return;
+        }
+        int playersTotal = this.eliminated.size();
+        this.eliminated.get(0).prizeMoney.addPrizeMoney(new PrizeMoney(this.name, this.prize_money.get(0)));
+        for (int i = 1; i < playersTotal; i++) {
+            int pm_index = (int)(Math.log(i) / Math.log(2));
+            PrizeMoney pm = new PrizeMoney(this.name, this.prize_money.get(pm_index + 1));
+            DartPlayer player = this.eliminated.get(i);
+            player.prizeMoney.addPrizeMoney(pm);
+        }
+    }
+
     public static void main(String[] args) {
-        DartPlayer p1 = new DartPlayer("L. Humphries", 10);
-        DartPlayer p2 = new DartPlayer("L. Littler", 10);
-        DartPlayer p3 = new DartPlayer("M. van Gerwen", 9);
-        DartPlayer p4 = new DartPlayer("R. Cross", 8);
-        DartPlayer p5 = new DartPlayer("S. Bunting", 8);
-        DartPlayer p6 = new DartPlayer("D. Chisnall", 7);
-        DartPlayer p7 = new DartPlayer("G. Price", 7);
+
+        DartPlayer p1 = new DartPlayer("L. Humphries", 10.0);
+        DartPlayer p2 = new DartPlayer("L. Littler", 10.0);
+        DartPlayer p3 = new DartPlayer("M. van Gerwen", 9.0);
+        DartPlayer p4 = new DartPlayer("R. Cross", 8.0);
+        DartPlayer p5 = new DartPlayer("S. Bunting", 8.0);
+        DartPlayer p6 = new DartPlayer("D. Chisnall", 7.0);
+        DartPlayer p7 = new DartPlayer("G. Price", 7.0);
 
 
 
@@ -139,11 +180,8 @@ public class Tournament {
         ArrayList<MatchLogic> rulesets = new ArrayList<>(Arrays.asList(rules1, rules2, rules3, rules4));
         
         Tournament testCup = new Tournament("Test Cup", 7, players, rulesets, null);
-
-        Scanner sc = new Scanner(System.in);
-
-        testCup.simRound(sc, 1, round1, round2);
         
+        testCup.simTournament();
     }
 
 
