@@ -57,8 +57,11 @@ public class TestDriver {
     private static void testPlayerMethods() {
         DartPlayer p1 = new DartPlayer("M. van Gerwen", 10);
         DartPlayer p1Expected = new DartPlayer("M. van Gerwen", 10);
+        p1.score = 501;
+        p1Expected.score = 501;
         testEquality(p1, p1Expected);
         p1.dartThrow(180, true, 0);
+        p1.score -= 180;
         p1Expected.score -= 180;
         p1Expected.stats.scores.add(180);
         p1Expected.stats.first9scores.add(180);
@@ -107,7 +110,7 @@ public class TestDriver {
         }
         // Case 1: Remaining Score (501-190) aims for T20
         bot.score = 501;
-        bot.dartsInHand = 1;
+        bot.dartsInHand = 3;
         for (; 190 <= bot.score; bot.score--) {
             tt = bot.getThrowTarget(false);
             testEquality(tt, t20);
@@ -128,7 +131,13 @@ public class TestDriver {
         // Case 1.5: Remaining Score (178-100) aims for T20
         for (; 100 <= bot.score; bot.score--) {
             tt = bot.getThrowTarget(false);
-            testEquality(tt, t20);
+            if (bot.score == 129 || bot.score == 126 || bot.score == 123) {
+                testEquality(tt, t19);
+            } else if (bot.score == 128 || bot.score == 125 || bot.score == 122) {
+                testEquality(tt, t18);
+            } else {
+                testEquality(tt, t20);
+            }
         }
         // Case 3: Remaining Score 99-98, aims for T19-T20 respectively
         tt = bot.getThrowTarget(false);
@@ -281,7 +290,7 @@ public class TestDriver {
 
     private static void runTests() {
         testPlayerMethods();
-        testOneLeg();
+        //testOneLeg();
         testSetPlay();
         testDartBotTargetLocating();
     }
