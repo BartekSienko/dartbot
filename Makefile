@@ -8,5 +8,8 @@ run: all
 test: all
 	java -ea -cp classes src/org/test/TestDriver.java
 
+tournament: all
+	java -ea -cp classes src/org/tournament/Tournament.java
+
 clean:
 	rm -rf classes

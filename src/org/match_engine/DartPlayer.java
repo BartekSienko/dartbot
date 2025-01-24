@@ -1,22 +1,28 @@
 package org.match_engine;
 
 import java.util.*;
+import org.tournament.*;
 
 
-public class Player {
+
+public class DartPlayer {
     public String name;
     public int score;
     public int legs;
     public int sets;
     public PlayerMatchStats stats;
+    public double rating;
+    public OverallPrizeMoney prizeMoney;
 
 
-    public Player(String name) {
+    public DartPlayer(String name, double rating) {
         this.name = name;
+        this.rating = rating;
         this.score = 0;
         this.legs = 0;
         this.sets = 0;
         this.stats = new PlayerMatchStats();
+        this.prizeMoney = new OverallPrizeMoney();
     }
 
     public void dartThrow(int pointsScored, boolean isDoubleOut, int dartsAtCheckout) {
@@ -209,17 +215,17 @@ public class Player {
 
     @Override
     public boolean equals(Object other) {
-        if (other instanceof Player player) {
+        if (other instanceof DartPlayer player) {
             return this.equals(player);
         }
         return false;
     }
 
-    public boolean equals(Player other) {
+    public boolean equals(DartPlayer other) {
         boolean nameCheck = this.name.equals(other.name);
         boolean scoreCheck = this.score == other.score;
         boolean legCheck = this.legs == other.legs;
-        boolean setCheck = true; //this.sets == other.sets;
+        boolean setCheck = this.sets == other.sets;
         boolean statCheck = this.stats.equals(other.stats);
         return nameCheck && scoreCheck && legCheck && setCheck && statCheck;
     }
