@@ -66,9 +66,9 @@ public class DartPlayer {
     }
 
     public int visitDoubles(Scanner sc, int pointsScored) {
-        //Set<Integer> possibleDartsAtCheckout = getPoissbleDartsForCheckout(pointsScored);
         Set<Integer> possibleDartsAtDouble = getPossibleDartsAtDouble(pointsScored);
-        if ((this.score - pointsScored) >= 50) {
+        Set<Integer> impossibleCheckouts = new HashSet<>(Arrays.asList(169, 168, 166, 165, 163, 162, 159));
+        if ((this.score - pointsScored) >= 50 || (impossibleCheckouts.contains(this.score) || this.score > 170)) {
             return 0;
         } else if (this.score - pointsScored == 0) {
             possibleDartsAtDouble.remove(0);
