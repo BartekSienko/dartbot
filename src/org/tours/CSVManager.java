@@ -1,4 +1,4 @@
-package org.tournament;
+package org.tours;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,8 +15,8 @@ public class CSVManager {
 
     }
 
-    public DartTour readCSVTourFile(String fileName) {
-        DartTour tour = new DartTour();
+    public DartTour readCSVTourFile(String fileName, String tourName) {
+        DartTour tour = new DartTour(tourName);
 
         try (Scanner csvScanner = new Scanner(new FileReader(fileName))) {
             this.getCompetitions(tour, csvScanner.nextLine());
@@ -90,7 +90,7 @@ public class CSVManager {
     }
 
     public void writeCSVTourFile(DartTour tour) {
-        File csvOutputFile = new File("tourFiles/b2tour.csv");
+        File csvOutputFile = new File("tourFiles/" + tour.fileName + ".csv");
         List<String> tournaments = tour.tournaments;
         
         List<String[]> output = new ArrayList<>();
@@ -138,9 +138,9 @@ public class CSVManager {
 
     public static void main(String[] args) {
         CSVManager csvManager = new CSVManager();
-        File file = new File("tourFiles/b2tour.csv");
+        File file = new File("tourFiles/b2Tour.csv");
         
-        DartTour tour = csvManager.readCSVTourFile(file.getAbsolutePath());
+        DartTour tour = csvManager.readCSVTourFile(file.getAbsolutePath(), "b2Tour");
 
         tour.sortByOoM();
         csvManager.writeCSVTourFile(tour);

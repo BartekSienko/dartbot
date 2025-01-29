@@ -1,13 +1,15 @@
-package org.tournament;
+package org.tours;
 
 import java.util.*;
 import org.match_engine.*;
 
 public class DartTour {
+    public String fileName;
     public List<String> tournaments;
     public List<DartPlayer> players;
 
-    public DartTour() {
+    public DartTour(String fileName) {
+        this.fileName = fileName;
         this.tournaments = new ArrayList<>();
         this.players = new ArrayList<>();
     }

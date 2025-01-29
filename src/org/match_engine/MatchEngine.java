@@ -7,6 +7,7 @@ public class MatchEngine {
     public DartPlayer player2;
     public final MatchLogic matchRules;
     public int onThrow;
+    public int onThrowSet;
 
 
     public MatchEngine(DartPlayer player1, DartPlayer player2, MatchLogic matchRules) {
@@ -16,6 +17,7 @@ public class MatchEngine {
         this.player2 = player2;
         this.player2.score = this.matchRules.getStartScore();
         this.onThrow = 2; // This is so that the first newLeg() gives player 1 the throw
+        this.onThrowSet = 2; // Same Logic as above
     }
 
 
@@ -28,6 +30,15 @@ public class MatchEngine {
             this.onThrow = 2;
         } else {
             this.onThrow = 1;
+        }
+        if (this.player1.legs == 0 && this.player2.legs == 0) {
+            if (this.onThrowSet == 1) {
+                this.onThrow = 2;
+                this.onThrowSet = 2;
+            } else {
+                this.onThrow = 1;
+                this.onThrowSet = 1;
+            }
         }
     }
 
@@ -90,6 +101,7 @@ public class MatchEngine {
         if (!matchRules.isSetPlay) {
             return null;
         }
+
         if (this.player1.legs >= matchRules.getLegLimit()) {
             this.player1.sets++;
             this.player1.legs = 0;

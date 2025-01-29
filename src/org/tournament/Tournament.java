@@ -4,6 +4,7 @@ import java.util.*;
 import org.drivers.MatchDriver;
 import org.match_engine.*;
 import org.match_engine.dartbot.*;
+import org.tours.PrizeMoney;
 
 public class Tournament {
     public String name;
@@ -11,16 +12,16 @@ public class Tournament {
     private final List<Deque<DartPlayer>> players;
     private final List<DartPlayer> eliminated;
     private final List<MatchLogic> rulesets;
-    private final List<Integer> prize_money;
+    private final List<Integer> prizeMoney;
     
     public Tournament(String name, int pCount, ArrayList<Deque<DartPlayer>> players,
-                      List<MatchLogic> rulesets, List<Integer> prize_money) {
+                      List<MatchLogic> rulesets, List<Integer> prizeMoney) {
         this.name = name;
         this.playerCount = pCount;
         this.players = players;
         this.eliminated = new ArrayList<>();
         this.rulesets = rulesets;
-        this.prize_money = prize_money;
+        this.prizeMoney = prizeMoney;
     }
 
     public void simTournament() {
@@ -141,14 +142,14 @@ public class Tournament {
     }
 
     public void generatePrizeMoney() {
-        if (this.prize_money == null) {
+        if (this.prizeMoney == null) {
             return;
         }
         int playersTotal = this.eliminated.size();
-        this.eliminated.get(0).prizeMoney.addPrizeMoney(new PrizeMoney(this.name, this.prize_money.get(0)));
+        this.eliminated.get(0).prizeMoney.addPrizeMoney(new PrizeMoney(this.name, this.prizeMoney.get(0)));
         for (int i = 1; i < playersTotal; i++) {
             int pm_index = (int)(Math.log(i) / Math.log(2));
-            PrizeMoney pm = new PrizeMoney(this.name, this.prize_money.get(pm_index + 1));
+            PrizeMoney pm = new PrizeMoney(this.name, this.prizeMoney.get(pm_index + 1));
             DartPlayer player = this.eliminated.get(i);
             player.prizeMoney.addPrizeMoney(pm);
         }
