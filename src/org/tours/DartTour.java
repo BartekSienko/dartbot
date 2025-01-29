@@ -1,4 +1,4 @@
-package org.tournament;
+package org.tours;
 
 import java.util.*;
 import org.match_engine.*;

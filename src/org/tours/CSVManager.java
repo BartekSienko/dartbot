@@ -1,4 +1,4 @@
-package org.tournament;
+package org.tours;
 
 import java.io.File;
 import java.io.FileNotFoundException;

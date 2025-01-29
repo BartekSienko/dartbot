@@ -1,7 +1,7 @@
 package org.match_engine;
 
 import java.util.*;
-import org.tournament.*;
+import org.tours.OverallPrizeMoney;
 
 
 
