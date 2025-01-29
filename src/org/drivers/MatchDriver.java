@@ -4,7 +4,7 @@ import org.match_engine.*;
 
 
 public class MatchDriver {
-    private MatchEngine match;
+    private final MatchEngine match;
 
     public MatchDriver(DartPlayer player1, DartPlayer player2, MatchLogic rules) {
         this.match = new MatchEngine(player1, player2, rules);
