@@ -60,20 +60,20 @@ public class StubTerminalMenu {
         System.out.print("Input Player 1 name: ");
         String p1Name = sc.nextLine();
         if (this.input == 1 || this.input == 2) {
-            player1 = new DartPlayer(p1Name, 10);
+            player1 = new DartPlayer(p1Name, 100);
         } else {
-            System.out.print("Input Player 1 Rating (0-10): ");
-            int rating = getIntInRange(0, 10);
+            System.out.print("Input Player 1 Rating (0-100): ");
+            int rating = getIntInRange(0, 100);
             player1 = new DartBot(p1Name, rating);
             sc.nextLine(); // Consume the new line
         }
         System.out.print("Input Player 2 name: ");
         String p2Name = sc.nextLine();
         if (this.input == 1 || this.input == 3) {
-            player2 = new DartPlayer(p2Name, 10);
+            player2 = new DartPlayer(p2Name, 100);
         } else {
-            System.out.print("Input Player 2 Rating (0-10): ");
-            int rating = getIntInRange(0, 10);
+            System.out.print("Input Player 2 Rating (0-100): ");
+            int rating = getIntInRange(0, 100);
             player2 = new DartBot(p2Name, rating);
             sc.nextLine(); // Consume the new line
         }
