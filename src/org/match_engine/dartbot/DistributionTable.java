@@ -13,19 +13,19 @@ public class DistributionTable {
         this.identifier = id;
         switch (id) {
             case "Trebles":
-                int trebleChange = (int) Math.round(650 - 25 * (10 - rating));
+                double trebleChange = (rating / 200);
                 this.table = generateTrebleDT(trebleChange);
                 break;
             case "Doubles":
-                int doubleChange = (int) Math.round(700 - 20 * (10 - rating));
+                double doubleChange = ((5.125 * rating + 40) / 1000);
                 this.table = generateDoubleDT(doubleChange);
                 break;
             case "Singles":
-                int singleChange = (int) Math.round(980 - 3 * (10 - rating));
+                double singleChange = ((-0.06 * (rating * rating) + (12.4 * rating) + 360) / 1000);
                 this.table = generateSingleDT(singleChange);
                 break;
             case "Bullseye":
-                int bullChange = (int) Math.round(450 - 10 * (10 - rating));
+                double bullChange = ((0.02 * (rating * rating) + 2 * rating + 10) / 1000);
                 this.table = generateBullDT(bullChange);
                 break;
             default:
@@ -33,72 +33,75 @@ public class DistributionTable {
         }    
     }
 
-    private ArrayList<Integer> generateTrebleDT(int trebleChance) {
+    private ArrayList<Integer> generateTrebleDT(double trebleChance) {
         ArrayList<Integer> distroTable = new ArrayList<>();
-        distroTable.add(trebleChance);
+        distroTable.add((int) (trebleChance * 1000));
 
-        int restChance = 1000 - trebleChance;
+        double restChance = 1 - trebleChance;
         // Add chance for single of aimed segment        
-        distroTable.add((int) Math.round(restChance * 0.86));
+        distroTable.add((int) Math.round(((0.86 - 0.5 * restChance) * restChance) * 1000));
 
         // Add chances for treble/single of segments left and right of target respectively
-        int trebleSideChance = (int) Math.round(restChance * 0.043 / 2);
-        int singleSideChance = (int) Math.round(restChance * 0.097 / 2);
-        distroTable.add(trebleSideChance);
-        distroTable.add(singleSideChance);
-        distroTable.add(trebleSideChance);
-        distroTable.add(singleSideChance);
+        int trebleSideChance = (int) Math.round((0.043 + 0.05 * restChance) * restChance * 1000);
+        int singleSideChance = (int) Math.round((0.097 + 0.425 * restChance) * restChance * 1000);
+        distroTable.add(trebleSideChance / 2);
+        distroTable.add(singleSideChance / 2);
+        distroTable.add(trebleSideChance / 2);
+        distroTable.add(singleSideChance / 2);
 
         // Add chances for hitting segments 2 left and 2 right of target
-        distroTable.add(0);
-        distroTable.add(0);
+        int farSingleSideChance = (int) Math.round(((0.025 * restChance) * restChance) * 1000);
+        distroTable.add(farSingleSideChance / 2);
+        distroTable.add(farSingleSideChance / 2);
 
+        
         return distroTable;
     }
 
-    private ArrayList<Integer> generateSingleDT(int singleChance) {
+    private ArrayList<Integer> generateSingleDT(double singleChance) {
         ArrayList<Integer> distroTable = new ArrayList<>();
         
-        int restChance = 1000 - singleChance;
+        double restChance = 1 - singleChance;
 
         // Add chance for treble of aimed segment
-        distroTable.add((int) Math.round(restChance * 0.369));
+        distroTable.add((int) Math.round(((0.369 - 0.1 * restChance) * restChance) * 1000));
 
         // Add chance for single of aimed segment        
-        distroTable.add(singleChance);
+        distroTable.add((int) (singleChance * 1000));
 
         // Add chances for treble/single of segments left and right of target respectively
-        int trebleSideChance = (int) Math.round(restChance * 0.164 / 2);
-        int singleSideChance = (int) Math.round(restChance * 0.467 / 2);
+        int trebleSideChance = (int) Math.round((((0.164 - 0.05 * restChance) * restChance) / 2) * 1000);
+        int singleSideChance = (int) Math.round((((0.467 + 0.1 * restChance) * restChance) / 2) * 1000);
         distroTable.add(trebleSideChance);
         distroTable.add(singleSideChance);
         distroTable.add(trebleSideChance);
         distroTable.add(singleSideChance);
 
         // Add chances for hitting segments 2 left and 2 right of target
-        distroTable.add(0);
-        distroTable.add(0);
+        int farSingleSideChance = (int) Math.round((0.05 * restChance * restChance / 2) * 1000);
+        distroTable.add(farSingleSideChance);
+        distroTable.add(farSingleSideChance);
         
         return distroTable;
     }
 
-    private ArrayList<Integer> generateDoubleDT(int doubleChance) {
+    private ArrayList<Integer> generateDoubleDT(double doubleChance) {
         ArrayList<Integer> distroTable = new ArrayList<>();
         
-        distroTable.add(doubleChance);
+        distroTable.add((int) (doubleChance * 1000));
 
-        int restChance = 1000 - doubleChance;
+        double restChance = 1 - doubleChance;
 
         // Add chance for hitting outside the board
-        distroTable.add((int) Math.round(restChance * 0.432));
+        distroTable.add((int) Math.round(((0.432 + 0.1 * restChance) * restChance) * 1000));
 
 
         // Add chance for single of aimed segment
-        distroTable.add((int) Math.round(restChance * 0.520));
+        distroTable.add((int) Math.round(((0.520 - 0.07 * restChance) * restChance) * 1000));
 
         // Add chances for double/single of segments left and right of target respectively
-        int doubleSideChance = (int) Math.round(restChance * 0.021 / 2);
-        int singleSideChance = (int) Math.round(restChance * 0.027 / 2);
+        int doubleSideChance = (int) Math.round((((0.021 - 0.01 * restChance) * restChance) / 2 * 1000));
+        int singleSideChance = (int) Math.round((((0.027 - 0.02 * restChance) * restChance) / 2 * 1000));
         distroTable.add(doubleSideChance);
         distroTable.add(singleSideChance);
         distroTable.add(doubleSideChance);
@@ -108,18 +111,18 @@ public class DistributionTable {
     }   
 
 
-    private ArrayList<Integer> generateBullDT(int bullChance) {
+    private ArrayList<Integer> generateBullDT(double bullChance) {
         ArrayList<Integer> distroTable = new ArrayList<>();
         
-        distroTable.add(bullChance);
+        distroTable.add((int) (bullChance * 1000));
 
-        int restChance = 1000 - bullChance;
+        double restChance = 1 - bullChance;
 
         // Add chance for 25
-        distroTable.add((int) Math.round(restChance * 0.121));
+        distroTable.add((int) Math.round(((0.849 - 0.3 * restChance) * restChance) * 1000));
     
         // Add chance for hitting outside the bull
-        distroTable.add((int) Math.round(restChance * 0.849));
+        distroTable.add((int) Math.round(((0.121 + 0.3 * restChance) * restChance) * 1000));
 
         
         return distroTable;

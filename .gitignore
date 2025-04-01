@@ -26,5 +26,8 @@ replay_pid*
 # Package files
 .DS_Store
 
+# Settings folder
+.vscode
+
 # Save files
 *.csv
