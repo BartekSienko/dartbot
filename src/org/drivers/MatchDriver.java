@@ -11,7 +11,7 @@ public class MatchDriver {
     }
 
 
-    public DartPlayer runMatch() {
+    public DartPlayer runMatch(boolean ifQuickSim) {
         DartPlayer winner = null;
         int legCount = 0;
         boolean matchFinished = false;
@@ -21,8 +21,8 @@ public class MatchDriver {
             if (match.matchRules.isSetPlay && match.player1.legs == 0 && match.player2.legs == 0) {
                 legCount = 0;
             }
-            System.out.println("Leg " + ++legCount + ":");
-            match.playLeg();
+            if (!ifQuickSim) System.out.println("Leg " + ++legCount + ":");
+            match.playLeg(ifQuickSim);
 
             if (match.ifWinner(match.player1) != null) {
                 System.out.println(match.player1.name + " has won the match!");
@@ -35,11 +35,13 @@ public class MatchDriver {
             }
         }
 
+        if (!ifQuickSim) {
         System.out.println("Match Stats:");
         System.out.println();
         System.out.println(match.player1.toStringStats());
         System.out.println();
         System.out.println(match.player2.toStringStats());
+        }
         return winner;
     }
 
@@ -54,6 +56,6 @@ public class MatchDriver {
 
         MatchDriver md = new MatchDriver(player1, player2, new MatchLogic(sc));
         
-        md.runMatch();
+        md.runMatch(false);
     }
 }

@@ -175,7 +175,7 @@ public class DartBot extends DartPlayer {
                                                       && !checkLegalDoubleScore(this.scoreThisVisit, isDoubleIn))) {
                 this.score = scoreBeforeVisit;
                 this.dartThrow(0, isDoubleOut, 3);
-                System.out.println("Bust score!");
+                System.out.println("Bust score!"); // Removed for QuickSims
                 return;
             } else if ((this.score) == 0) {
                 break;

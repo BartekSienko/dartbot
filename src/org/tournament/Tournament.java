@@ -34,7 +34,7 @@ public class Tournament {
             round2 = new ArrayDeque<>();
         }
 
-        this.simRound(sc, 1, round1, round2);
+        this.startRound(sc, 1, round1, round2);
         
         this.generatePrizeMoney();
 
@@ -42,7 +42,7 @@ public class Tournament {
 
     } 
 
-    public void simRound(Scanner sc, int roundNr, Deque<DartPlayer> competingPlayers, 
+    public void startRound(Scanner sc, int roundNr, Deque<DartPlayer> competingPlayers, 
                     Deque<DartPlayer> nextRound) {
         String roundName;
         if (playerCount == 8) {
@@ -66,12 +66,11 @@ public class Tournament {
             this.printMatchInfo(p1.name, p2.name);
             DartPlayer p1Playing = null;
             DartPlayer p2Playing = null;
-            int input = this.getIntInRange(sc, 0, 3);
+            int input = this.getIntInRange(sc, 0, 5);
+            boolean ifQuickSim = false;
             switch(input) {
                 case 0:
-                    p1Playing = new DartBot(p1.name, p1.rating);
-                    p2Playing = new DartBot(p2.name, p2.rating);
-                    break;
+                    //SAVE!!!!!!
                 case 1:
                     p1Playing = new DartPlayer(p1.name, p1.rating);
                     p2Playing = new DartBot(p2.name, p2.rating);
@@ -84,9 +83,18 @@ public class Tournament {
                     p1Playing = new DartPlayer(p1.name, p1.rating);
                     p2Playing = new DartPlayer(p2.name, p2.rating);
                     break;
+                case 4:
+                    p1Playing = new DartBot(p1.name, p1.rating);
+                    p2Playing = new DartBot(p2.name, p2.rating);
+                    break;
+                case 5:
+                    p1Playing = new DartBot(p1.name, p1.rating);
+                    p2Playing = new DartBot(p2.name, p2.rating);
+                    ifQuickSim = true;
+                    break;
             }
             MatchDriver matchDriver = new MatchDriver(p1Playing, p2Playing, rulesets.get(roundNr-1));
-            DartPlayer winner = matchDriver.runMatch();
+            DartPlayer winner = matchDriver.runMatch(ifQuickSim);
             if (p1Playing.equals(winner)) {
                 nextRound.add(p1);
                 eliminated.addFirst(p2);
@@ -105,10 +113,11 @@ public class Tournament {
             } else {
                 followingRound = new ArrayDeque<>();
             }
-            simRound(sc, ++roundNr, nextRound, followingRound);
+            startRound(sc, ++roundNr, nextRound, followingRound);
         }  
 
     }
+
 
     public int getIntInRange(Scanner sc, int minLimit, int maxLimit) {
         int input = -1;
@@ -125,10 +134,12 @@ public class Tournament {
     public void printMatchInfo(String name1, String name2) {
         System.out.println("Match: " + name1 + " vs " + name2);
         System.out.println("Select option: ");
-        System.out.println("0: Sim Match (Bot vs Bot)");
+        System.out.println("0: Go Back");
         System.out.println("1: Play as " + name1);
         System.out.println("2: Play as " + name2);
         System.out.println("3: Play as both players");
+        System.out.println("4: Sim Match (Bot vs Bot)");
+        System.out.println("5: Quick Sim Match (Bot vs Bot)");
     }
 
     public void printMatchList(Deque<DartPlayer> players, int matchCount) {

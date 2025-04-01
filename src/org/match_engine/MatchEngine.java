@@ -43,7 +43,7 @@ public class MatchEngine {
     }
 
 
-    public void playLeg() {
+    public void playLeg(boolean ifQuickSim) {
         this.newLeg();
         int playerToThrow = this.onThrow;
         Scanner sc = new Scanner(System.in);
@@ -58,43 +58,45 @@ public class MatchEngine {
                 playerToThrow = 1;
             }
 
-            if (matchRules.isSetPlay) {
-                System.out.println(this.player1.toStringSetPlay());
-                System.out.println(this.player2.toStringSetPlay());
-            } else {
-                System.out.println(this.player1.toString());
-                System.out.println(this.player2.toString());
+            if (!ifQuickSim) {
+                if (matchRules.isSetPlay) {
+                    System.out.println(this.player1.toStringSetPlay());
+                    System.out.println(this.player2.toStringSetPlay());
+                } else {
+                    System.out.println(this.player1.toString());
+                    System.out.println(this.player2.toString());
+                }
+                System.out.println();
             }
-            System.out.println();
-            
         }
 
         DartPlayer hasWonLeg = this.ifWonLeg();
         if (hasWonLeg != null) {
             if (hasWonLeg.equals(this.player1)) {
-                System.out.println(this.player1.name + " has won the leg!");
+                if (!ifQuickSim) System.out.println(this.player1.name + " has won the leg!");
                 this.player1.updateBestWorstLegs();
             } else {
-                System.out.println(this.player2.name + " has won the leg!");
+                if (!ifQuickSim) System.out.println(this.player2.name + " has won the leg!");
                 this.player2.updateBestWorstLegs();
             }
             
             DartPlayer hasWonSet = this.ifWonSet();
             if (hasWonSet != null) {
                 if (hasWonSet.equals(this.player1)) {
-                    System.out.println(this.player1.name + " has won the set!");
+                    if (!ifQuickSim) System.out.println(this.player1.name + " has won the set!");
                 } else {
-                    System.out.println(this.player2.name + " has won the set!");
+                    if (!ifQuickSim) System.out.println(this.player2.name + " has won the set!");
                 }
             }
         } 
 
-        if (matchRules.isSetPlay) {
-            System.out.println(this.toStringSetPlay());
-        } else {
-            System.out.println(this.toString());
+        if (!ifQuickSim) {
+            if (matchRules.isSetPlay) {
+                System.out.println(this.toStringSetPlay());
+            } else {
+                System.out.println(this.toString());
+            }
         }
-        
     }
 
     public DartPlayer ifWonSet() {

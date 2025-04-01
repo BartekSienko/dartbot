@@ -80,7 +80,7 @@ public class StubTerminalMenu {
     
         MatchLogic rules = new MatchLogic(this.sc);
         MatchDriver match = new MatchDriver(player1, player2, rules);
-        match.runMatch();
+        match.runMatch(false);
 
     }
 
