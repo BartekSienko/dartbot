@@ -3,11 +3,13 @@ package org.tours;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.match_engine.*;
+import org.tournament.*;
 
 public class CSVManager {
     
@@ -117,6 +119,85 @@ public class CSVManager {
         }
 
     }
+
+    public void writeTournamentSaveFile(Tournament tournament, int roundNr) {
+        File csvOutputFile = new File("saveFiles/" + tournament.name + ".csv");
+
+        List<String[]> output = new ArrayList<>();
+
+        output.add(new String[] {"TournamentName", tournament.name});
+        output.add(new String[] {"PlayerCount", "" + tournament.playerCount});
+        output.add(new String[] {"RoundNumber", "" + roundNr});
+        output.add(new String[] {"MatchNumber", "" + tournament.roundMatchNumber});
+
+        int lastRoundWithPlayers = tournament.players.size();
+
+        for (int i = 0; i < lastRoundWithPlayers; i++) {
+            String position;
+            if (i == 0) {
+                position = "START";
+            } else if (i == (lastRoundWithPlayers - 1)){
+                position = "END";
+            } else {
+                position = "NEXT";
+            }
+
+            output.add(new String[] {("Players-" + i), (position)});
+
+            Deque<DartPlayer> curRound = tournament.players.get(i);
+            for (DartPlayer curPlayer : curRound) {
+                output.add(new String[] {(curPlayer.name), (curPlayer.rating + "")});
+            }
+        }
+
+        output.add(new String[] {("Eliminated"), ("START")});
+
+        for (DartPlayer curPlayer : tournament.eliminated) {
+            output.add(new String[] {(curPlayer.name), (curPlayer.rating + "")});
+        }
+
+        output.add(new String[] {("Rulesets"), "startScore", "legLimit", "isSetPlay", "setLimit", "doubleIn", "doubleOut"});
+
+        for (MatchLogic curRuleset: tournament.rulesets) {
+            output.add(new String[] {"RuleSet", curRuleset.getStartScore() + "", curRuleset.getLegLimit() + "", curRuleset.isSetPlay + "", curRuleset.ifDoubleIn() + "", curRuleset.ifDoubleOut() + ""});
+        }
+
+        String[] prizeMoneyRow = new String[tournament.prizeMoney.size()];
+        for (int i = 0; i < tournament.prizeMoney.size(); i++) {
+            Integer curPM = tournament.prizeMoney.get(i);
+            prizeMoneyRow[i] = curPM.toString();
+        }
+
+        output.add(prizeMoneyRow);
+/**
+        try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
+            output.stream()
+            .map(this::convertToCSV)
+            .forEach(pw::println);
+        } catch (FileNotFoundException fe) {
+            System.out.println("The impossible happened, output file not found?");
+        }
+*/
+    }
+
+    public void finalizeSaveFile(String fileName, List<String[]> output) {
+        File csvOutputFile = new File("saveFiles/" + fileName + ".csv");
+
+        try {
+            csvOutputFile.createNewFile();
+        } catch (IOException ioe) {
+            System.out.println("The impossible happened, I/O Exception");
+        }
+
+        try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
+            output.stream()
+            .map(this::convertToCSV)
+            .forEach(pw::println);
+        } catch (FileNotFoundException fe) {
+            System.out.println("The impossible happened, output file not found?");
+        }
+    }
+
 
     private String convertToCSV(String[] data) {
         return Stream.of(data)
