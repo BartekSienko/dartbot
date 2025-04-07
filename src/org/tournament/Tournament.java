@@ -1,6 +1,5 @@
 package org.tournament;
 
-import java.io.File;
 import java.util.*;
 import org.drivers.MatchDriver;
 import org.match_engine.*;

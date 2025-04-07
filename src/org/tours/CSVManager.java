@@ -9,7 +9,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.match_engine.*;
-import org.tournament.*;
+import org.tournament.Tournament;
 
 public class CSVManager {
     
@@ -120,68 +120,70 @@ public class CSVManager {
 
     }
 
-    public void writeTournamentSaveFile(Tournament tournament, int roundNr) {
-        File csvOutputFile = new File("saveFiles/" + tournament.name + ".csv");
 
-        List<String[]> output = new ArrayList<>();
-
-        output.add(new String[] {"TournamentName", tournament.name});
-        output.add(new String[] {"PlayerCount", "" + tournament.playerCount});
-        output.add(new String[] {"RoundNumber", "" + roundNr});
-        output.add(new String[] {"MatchNumber", "" + tournament.roundMatchNumber});
-
-        int lastRoundWithPlayers = tournament.players.size();
-
-        for (int i = 0; i < lastRoundWithPlayers; i++) {
-            String position;
-            if (i == 0) {
-                position = "START";
-            } else if (i == (lastRoundWithPlayers - 1)){
-                position = "END";
-            } else {
-                position = "NEXT";
+    public String getXPartInCSVFile(String line, int x) {
+        try (Scanner rowScanner = new Scanner(line)) {
+            String toReturn = "";
+            rowScanner.useDelimiter(",");
+            for (int i = 0; i < x; i++) {
+                toReturn = rowScanner.next();
             }
-
-            output.add(new String[] {("Players-" + i), (position)});
-
-            Deque<DartPlayer> curRound = tournament.players.get(i);
-            for (DartPlayer curPlayer : curRound) {
-                output.add(new String[] {(curPlayer.name), (curPlayer.rating + "")});
-            }
+            return toReturn;
         }
-
-        output.add(new String[] {("Eliminated"), ("START")});
-
-        for (DartPlayer curPlayer : tournament.eliminated) {
-            output.add(new String[] {(curPlayer.name), (curPlayer.rating + "")});
-        }
-
-        output.add(new String[] {("Rulesets"), "startScore", "legLimit", "isSetPlay", "setLimit", "doubleIn", "doubleOut"});
-
-        for (MatchLogic curRuleset: tournament.rulesets) {
-            output.add(new String[] {"RuleSet", curRuleset.getStartScore() + "", curRuleset.getLegLimit() + "", curRuleset.isSetPlay + "", curRuleset.ifDoubleIn() + "", curRuleset.ifDoubleOut() + ""});
-        }
-
-        String[] prizeMoneyRow = new String[tournament.prizeMoney.size()];
-        for (int i = 0; i < tournament.prizeMoney.size(); i++) {
-            Integer curPM = tournament.prizeMoney.get(i);
-            prizeMoneyRow[i] = curPM.toString();
-        }
-
-        output.add(prizeMoneyRow);
-/**
-        try (PrintWriter pw = new PrintWriter(csvOutputFile)) {
-            output.stream()
-            .map(this::convertToCSV)
-            .forEach(pw::println);
-        } catch (FileNotFoundException fe) {
-            System.out.println("The impossible happened, output file not found?");
-        }
-*/
     }
 
+    public String findTournamentInfo(File csvFile) {
+        try (Scanner csvScanner = new Scanner(new FileReader(csvFile))) {
+            //Using a variable for easier debugging
+            String curLine = csvScanner.nextLine();
+            
+            String tournamentName = getXPartInCSVFile(curLine, 2);
+            
+            csvScanner.nextLine(); // Skips PlayerCount
+
+            curLine = csvScanner.nextLine();
+            Integer roundNr = Integer.valueOf(getXPartInCSVFile(curLine, 2));
+
+            csvScanner.nextLine(); // Skips MatchNumber
+
+            // Skips Lines until we reach the current rounds players
+            curLine = csvScanner.nextLine();
+            while (!getXPartInCSVFile(curLine, 1).equals("Players-" + (roundNr - 1))) {
+                curLine = csvScanner.nextLine();
+            }
+
+            curLine = csvScanner.nextLine();
+            String player1 = getXPartInCSVFile(curLine, 1);
+
+            String player2 = "";
+            
+            // Skips until we reach the final player in the round / the opponent
+            while (!getXPartInCSVFile(curLine, 1).equals("Players-" + (roundNr))) {
+                player2 = getXPartInCSVFile(curLine, 1);
+                curLine = csvScanner.nextLine();
+            }
+
+            return tournamentName + " (Round: " + roundNr + ") " + 
+                   "(" + player1 + " vs " + player2 + ")";
+
+        } catch (FileNotFoundException fe) {
+            System.out.println(csvFile + " was not found!");
+        }
+        return "";
+    }
+
+
+    public Tournament readCSVTournamentFile(File csvFile) {
+        return null;
+    }
+
+
     public void finalizeSaveFile(String fileName, List<String[]> output) {
-        File csvOutputFile = new File("saveFiles/" + fileName + ".csv");
+        int saveNr = 0;
+        while ((new File("saveFiles/" + fileName + "-" + saveNr + ".csv")).isFile()) {
+            saveNr++;
+        }
+        File csvOutputFile = new File("saveFiles/" + fileName  + "-" + saveNr + ".csv");
 
         try {
             csvOutputFile.createNewFile();
