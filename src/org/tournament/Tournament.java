@@ -11,10 +11,12 @@ public class Tournament {
     public String name;
     public int playerCount;
     public final List<Deque<DartPlayer>> players;
-    public final List<DartPlayer> eliminated;
+    public List<DartPlayer> eliminated;
     public final List<MatchLogic> rulesets;
     public final List<Integer> prizeMoney;
+    public int roundNumber;
     public int roundMatchNumber;
+    public int roundTotalMatches;
     
     public Tournament(String name, int pCount, ArrayList<Deque<DartPlayer>> players,
                       List<MatchLogic> rulesets, List<Integer> prizeMoney) {
@@ -24,8 +26,11 @@ public class Tournament {
         this.eliminated = new ArrayList<>();
         this.rulesets = rulesets;
         this.prizeMoney = prizeMoney;
+        this.roundNumber = 1;
         this.roundMatchNumber = 0;
+        this.roundTotalMatches = 0;
     }
+
 
     public void simTournament() {
         Scanner sc = new Scanner(System.in);
@@ -37,7 +42,7 @@ public class Tournament {
             round2 = new ArrayDeque<>();
         }
 
-        boolean isDone = this.startRound(sc, 1, round1, round2);
+        boolean isDone = this.startRound(sc, round1, round2);
         if (isDone) {
             this.generatePrizeMoney();
             if (!this.eliminated.isEmpty()) {
@@ -47,7 +52,7 @@ public class Tournament {
 
     } 
 
-    public boolean startRound(Scanner sc, int roundNr, Deque<DartPlayer> competingPlayers, 
+    public boolean startRound(Scanner sc, Deque<DartPlayer> competingPlayers, 
                     Deque<DartPlayer> nextRound) {
         String roundName;
         if (playerCount == 8) {
@@ -57,15 +62,13 @@ public class Tournament {
         } else if (playerCount == 2) {
             roundName = "Final";
         } else {
-            roundName = roundNr + "";
+            roundName = roundNumber + "";
         }
 
         System.out.println("-------------");
         System.out.println("Current Round: " + roundName);
-        int matchCount = competingPlayers.size() / 2;
-        this.printMatchList(competingPlayers, matchCount);
-        for (int i = this.roundMatchNumber; i < matchCount; i++) {
-            this.roundMatchNumber++;
+        this.printMatchList(competingPlayers, (roundTotalMatches - roundMatchNumber));
+        for (int i = this.roundMatchNumber; i < roundTotalMatches; i++) {
             DartPlayer p1 = competingPlayers.removeFirst();
             DartPlayer p2 = competingPlayers.removeLast();
             System.out.println("-------------");
@@ -78,7 +81,7 @@ public class Tournament {
                 case 0:
                 competingPlayers.addFirst(p1);
                 competingPlayers.addLast(p2);
-                this.saveTournament(roundNr);
+                this.saveTournament();
                     return false;
                 case 1:
                     p1Playing = new DartPlayer(p1.name, p1.rating);
@@ -102,8 +105,9 @@ public class Tournament {
                     ifQuickSim = true;
                     break;
             }
-            MatchDriver matchDriver = new MatchDriver(p1Playing, p2Playing, rulesets.get(roundNr-1));
+            MatchDriver matchDriver = new MatchDriver(p1Playing, p2Playing, rulesets.get(roundNumber-1));
             DartPlayer winner = matchDriver.runMatch(ifQuickSim);
+            this.roundMatchNumber++;
             if (p1Playing.equals(winner)) {
                 nextRound.add(p1);
                 eliminated.addFirst(p2);
@@ -119,14 +123,16 @@ public class Tournament {
             eliminated.addFirst(nextRound.getFirst());
         } else {
             Deque<DartPlayer> followingRound;
-            if (this.players.size() > (roundNr + 1)) {
-                followingRound = this.players.get(roundNr + 1);
+            if (this.players.size() > (roundNumber + 1)) {
+                followingRound = this.players.get(roundNumber + 1);
             } else {
                 followingRound = new ArrayDeque<>();
                 this.players.add(followingRound);
             }
             this.roundMatchNumber = 0;
-            return startRound(sc, ++roundNr, nextRound, followingRound);
+            this.roundTotalMatches = nextRound.size() / 2;
+            roundNumber++;
+            return startRound(sc, nextRound, followingRound);
         }  
         return true;
     }
@@ -180,13 +186,14 @@ public class Tournament {
     }
 
 
-    public void saveTournament(int roundNr) {
+    public void saveTournament() {
         List<String[]> output = new ArrayList<>();
 
         output.add(new String[] {"TournamentName", this.name});
         output.add(new String[] {"PlayerCount", "" + this.playerCount});
-        output.add(new String[] {"RoundNumber", "" + roundNr});
+        output.add(new String[] {"RoundNumber", "" + this.roundNumber});
         output.add(new String[] {"MatchNumber", "" + this.roundMatchNumber});
+        output.add(new String[] {"TotalMatches", "" + this.roundTotalMatches});
 
         int lastRoundWithPlayers = this.players.size();
 
@@ -217,7 +224,7 @@ public class Tournament {
         output.add(new String[] {("Rulesets"), "startScore", "legLimit", "isSetPlay", "setLimit", "doubleIn", "doubleOut"});
 
         for (MatchLogic curRuleset: this.rulesets) {
-            output.add(new String[] {"RuleSet", curRuleset.getStartScore() + "", curRuleset.getLegLimit() + "", curRuleset.isSetPlay + "", curRuleset.ifDoubleIn() + "", curRuleset.ifDoubleOut() + ""});
+            output.add(new String[] {"RuleSet", curRuleset.getStartScore() + "", curRuleset.getLegLimit() + "", curRuleset.isSetPlay + "", curRuleset.getSetLimit() + "", curRuleset.ifDoubleIn() + "", curRuleset.ifDoubleOut() + ""});
         }
 
         String[] prizeMoneyRow = new String[this.prizeMoney.size() + 1];
@@ -232,6 +239,13 @@ public class Tournament {
         CSVManager csvManager = new CSVManager();
         csvManager.finalizeSaveFile(this.name, output);
         System.out.println("Tournament Saved!");
+    }
+
+    public void loadTournament() {
+        Deque<DartPlayer> competingPlayers = this.players.get(roundNumber - 1);
+        Deque<DartPlayer> nextRound = this.players.get(roundNumber);
+        Scanner sc = new Scanner(System.in);
+        this.startRound(sc, competingPlayers, nextRound);
     }
 
 
@@ -263,7 +277,7 @@ public class Tournament {
         
         ArrayList<Integer> prizeMoney = new ArrayList<>(Arrays.asList(500, 250, 100, 50, 25));
 
-        Tournament testCup = new Tournament("Test Cup", 7, players, rulesets, prizeMoney);
+        Tournament testCup = new Tournament("At Final Test Cup", 7, players, rulesets, prizeMoney);
         
         testCup.simTournament();
     }

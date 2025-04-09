@@ -106,6 +106,7 @@ public class StubTerminalMenu {
         int option = getIntInRange(0, allSaveFiles.length);
         if (option != 0) {
             Tournament loadingTournament = csvMan.readCSVTournamentFile(allSaveFiles[option - 1]);
+            loadingTournament.loadTournament();
         }
     }
 
