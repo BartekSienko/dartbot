@@ -1,3 +1,9 @@
+## The project ended up being largely refactored into Flutter/Dart for it's frontend capabilities. A new repo was opened for it at https://github.com/BartekSienko/dartbot-redux/
+
+
+
+
+
 # dartbot
 A dart app with a AI bot included as the opponent, also with a career mode game planned down the road
 
