@@ -1,9 +1,12 @@
 package org.menu;
 
+import java.io.File;
 import java.util.Scanner;
 import org.drivers.MatchDriver;
 import org.match_engine.*;
 import org.match_engine.dartbot.DartBot;
+import org.tournament.Tournament;
+import org.tours.CSVManager;
 
 public class StubTerminalMenu {
     private final Scanner sc;
@@ -18,9 +21,10 @@ public class StubTerminalMenu {
     public void print_main_menu() {
         System.out.println("-----------------");
         String str = "1) Play a match\n" + 
-                     "2) Play a tournament\n" + 
-                     "3) New Career Mode\n" + 
-                     "4) Load Career Mode\n" + 
+                     "2) New Tournament\n" + 
+                     "3) Load Tournament\n" + 
+                     "4) New Career Mode\n" + 
+                     "5) Load Career Mode\n" + 
                      "0) Quit\n";
         System.out.println(str);
     }
@@ -29,10 +33,13 @@ public class StubTerminalMenu {
         if (this.input == 1) {
             setup_match();
         } else if (this.input == 2) {
-
+            //menu_setup_tournament();
         } else if (this.input == 3) {
-
+            System.out.println("-----------------");
+            menu_load_tournament();
         } else if (this.input == 4) {
+
+        } else if (this.input == 5) {
 
         }
     }
@@ -41,7 +48,7 @@ public class StubTerminalMenu {
     public void main_menu() {
         while (this.input != 0) {
             print_main_menu();
-            System.out.print("Input option: ");
+            System.out.print("Input Option: ");
             this.input = getIntInRange(0, 4);
             handle_main_menu();
         }
@@ -83,6 +90,26 @@ public class StubTerminalMenu {
         match.runMatch(false);
 
     }
+
+    public void menu_load_tournament() {
+        File saveDir = new File("saveFiles/");
+        File[] allSaveFiles = saveDir.listFiles();
+
+        CSVManager csvMan = new CSVManager();
+
+        for (int i = 0; i < allSaveFiles.length; i++) {
+            System.out.println((i+1) + ") " + csvMan.findTournamentInfo(allSaveFiles[i]));
+        }
+        System.out.println("0) Go Back");
+        
+        System.out.print("\nSelect Save File: ");
+        int option = getIntInRange(0, allSaveFiles.length);
+        if (option != 0) {
+            Tournament loadingTournament = csvMan.readCSVTournamentFile(allSaveFiles[option - 1]);
+            loadingTournament.loadTournament();
+        }
+    }
+
 
 
     public int getIntInRange(int minLimit, int maxLimit) {
