@@ -1,16 +1,16 @@
-# dartbot
-A dart app with a AI bot included as the opponent, also with a career mode game planned down the road
+# dartbot_redux
 
+A new Flutter project.
 
-## Current work progress:
-- A match engine with manual playing has been implemented
-- Some customization in match types has also been added (301, setplay, double in/out)
-- A more complicated version of the dartbot exists but still needs work with (Bot can play with a 3-dart average of 30ish-130)
+## Getting Started
 
-## To be added:
-- Further Adjustable difficulty for dartbot (reaching down to 20 average)
-- Being able to create custom tournaments
-- Saving progress for tournaments and career modes
-- More customizable match types (2v2)
-- Career mode around engine
-  
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
